@@ -1,0 +1,1 @@
+temponun arayuz kodu
