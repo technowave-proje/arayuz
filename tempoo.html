@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEMPO Hava Kalitesi İzleme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .air-quality-excellent { background: linear-gradient(135deg, #4ade80, #22c55e); }
+        .air-quality-good { background: linear-gradient(135deg, #4ade80, #22c55e); }
+        .air-quality-moderate { background: linear-gradient(135deg, #eab308, #ca8a04); }
+        .air-quality-unhealthy { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .air-quality-very-unhealthy { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .air-quality-hazardous { background: linear-gradient(135deg, #7c3aed, #581c87); }
+        
+        .notification-slide {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🛰️</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">TEMPO</h1>
+                        <p class="text-xs opacity-90">Hava Kalitesi İzleme</p>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex space-x-6">
+                    <button onclick="showSection('home')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Ana Sayfa</button>
+                    <button onclick="showSection('map')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Harita</button>
+                    <button onclick="showSection('forecast')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Tahmin</button>
+                    <button onclick="showSection('alerts')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Uyarılar</button>
+                </div>
+                
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-black bg-opacity-20">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="showSection('home')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Ana Sayfa</button>
+                <button onclick="showSection('map')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Harita</button>
+                <button onclick="showSection('forecast')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Tahmin</button>
+                <button onclick="showSection('alerts')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Uyarılar</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex-1 relative">
+                    <input type="text" id="searchInput" placeholder="Örn: New York, Toronto, Mexico City..." 
+                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           autocomplete="off">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <!-- Search Suggestions -->
+                    <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-10 hidden max-h-60 overflow-y-auto">
+                    </div>
+                </div>
+                <button onclick="searchLocation()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Ara
+                </button>
+                <button onclick="getCurrentLocation()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Konumum
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- Home Section -->
+        <div id="homeSection" class="section">
+            <!-- Current Air Quality Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex flex-col lg:flex-row items-center justify-between">
+                    <div class="text-center lg:text-left mb-4 lg:mb-0">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Mevcut Hava Kalitesi</h2>
+                        <p id="currentLocation" class="text-gray-600 mb-4">📍 New York City, ABD</p>
+                        <div class="flex items-center justify-center lg:justify-start gap-4">
+                            <div id="aqiValue" class="text-6xl font-bold text-green-600">42</div>
+                            <div>
+                                <div id="aqiStatus" class="text-xl font-semibold text-green-600">İyi</div>
+                                <div class="text-sm text-gray-500">AQI Değeri</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aqiCircle" class="w-32 h-32 rounded-full air-quality-good flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        <div class="text-center">
+                            <div class="text-2xl">😊</div>
+                            <div class="text-xs">Temiz</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pollutant Details -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mt-6 pt-6 border-t">
+                    <div class="text-center relative group cursor-help">
+                        <div class="text-2xl font-bold text-purple-600" id="pm10">18</div>
+                        <div class="text-sm text-gray-600">PM10</div>
+                        <div class="text-xs text-gray-500">µg/m³</div>
+                        <!-- Tooltip -->
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            <div class="font-semibold">Partikül Madde Verisi</div>
+                            <div>10 mikrometreden küçük partiküller</div>
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center relative group cursor-help">
+                        <div class="text-2xl font-bold text-orange-600" id="no2">25</div>
+                        <div class="text-sm text-gray-600">NO₂</div>
+                        <div class="text-xs text-gray-500">µg/m³</div>
+                        <!-- Tooltip -->
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            <div class="font-semibold">Azot Dioksit</div>
+                            <div>Araç egzozları ve sanayi kaynaklı</div>
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center relative group cursor-help">
+                        <div class="text-2xl font-bold text-red-600" id="o3">85</div>
+                        <div class="text-sm text-gray-600">O₃</div>
+                        <div class="text-xs text-gray-500">µg/m³</div>
+                        <!-- Tooltip -->
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            <div class="font-semibold">Ozon</div>
+                            <div>Yer seviyesi ozon gazı</div>
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center relative group cursor-help">
+                        <div class="text-2xl font-bold text-yellow-600" id="so2">15</div>
+                        <div class="text-sm text-gray-600">SO₂</div>
+                        <div class="text-xs text-gray-500">µg/m³</div>
+                        <!-- Tooltip -->
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            <div class="font-semibold">Kükürt Dioksit</div>
+                            <div>Fosil yakıt yanması sonucu</div>
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center relative group cursor-help">
+                        <div class="text-2xl font-bold text-green-600" id="co">0.8</div>
+                        <div class="text-sm text-gray-600">CO</div>
+                        <div class="text-xs text-gray-500">mg/m³</div>
+                        <!-- Tooltip -->
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            <div class="font-semibold">Karbon Monoksit</div>
+                            <div>Renksiz, kokusuz zehirli gaz</div>
+                            <div class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">24 Saatlik AQI Trendi</h3>
+                            <p class="text-3xl font-bold text-green-600 mt-2" id="trendValue">↗️ 38→42</p>
+                            <p class="text-sm text-gray-600" id="trendDescription">Hava kalitesi iyileşiyor</p>
+                        </div>
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">📈</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Hava Durumu</h3>
+                            <p class="text-3xl font-bold text-blue-600 mt-2">22°C</p>
+                            <p class="text-sm text-gray-600">Parçalı bulutlu</p>
+                        </div>
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">⛅</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Rüzgar</h3>
+                            <p class="text-3xl font-bold text-purple-600 mt-2">12 km/h</p>
+                            <p class="text-sm text-gray-600">Kuzeybatı</p>
+                        </div>
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">💨</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Weather Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Nem</h3>
+                            <p class="text-3xl font-bold text-cyan-600 mt-2" id="humidity">68%</p>
+                            <p class="text-sm text-gray-600">Orta seviye</p>
+                        </div>
+                        <div class="w-16 h-16 bg-cyan-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">💧</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Yağış</h3>
+                            <p class="text-3xl font-bold text-indigo-600 mt-2" id="precipitation">0 mm</p>
+                            <p class="text-sm text-gray-600">Son 24 saat</p>
+                        </div>
+                        <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">🌧️</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Basınç</h3>
+                            <p class="text-3xl font-bold text-emerald-600 mt-2" id="pressure">1013 hPa</p>
+                            <p class="text-sm text-gray-600">Deniz seviyesi</p>
+                        </div>
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">🌡️</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Air Quality Alerts Container -->
+            <div id="airQualityAlerts" class="fixed top-20 right-4 z-40 space-y-3 max-w-sm"></div>
+
+            <!-- Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Son 24 Saat Hava Kalitesi Trendi</h3>
+                <canvas id="aqiChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div id="mapSection" class="section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Hava Kalitesi Haritası</h2>
+                <div class="mb-4 flex flex-wrap gap-2">
+                    <button onclick="filterMap('all')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Tümü</button>
+                    <button onclick="filterMap('pm25')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">PM2.5</button>
+                    <button onclick="filterMap('pm10')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">PM10</button>
+                    <button onclick="filterMap('no2')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">NO₂</button>
+                    <button onclick="filterMap('o3')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">O₃</button>
+                </div>
+                <div id="map" class="w-full h-96 rounded-lg border"></div>
+                
+                <!-- Legend -->
+                <div class="mt-4 flex flex-wrap gap-4 justify-center">
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                        <span class="text-sm">İyi (0-50)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                        <span class="text-sm">Orta (51-100)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                        <span class="text-sm">Kötü (101-150)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 rounded-full bg-purple-500"></div>
+                        <span class="text-sm">Tehlikeli (151+)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Section -->
+        <div id="forecastSection" class="section hidden">
+            <!-- Forecast Toggle and Content -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <!-- Toggle Buttons -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Hava Kalitesi Tahmini</h2>
+                    <div class="flex bg-gray-100 rounded-lg p-1">
+                        <button onclick="toggleForecast('hourly')" id="hourlyBtn" class="px-4 py-2 rounded-md bg-blue-600 text-white font-medium transition-colors">
+                            📅 24 Saatlik
+                        </button>
+                        <button onclick="toggleForecast('daily')" id="dailyBtn" class="px-4 py-2 rounded-md text-gray-600 font-medium hover:text-gray-800 transition-colors">
+                            📊 7 Günlük
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 24-Hour Forecast -->
+                <div id="hourlyForecast" class="forecast-content">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+                        <div class="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            <div class="font-semibold text-gray-800 text-sm">Şimdi</div>
+                            <div class="text-2xl my-2">😊</div>
+                            <div class="text-xl font-bold text-green-600">42</div>
+                            <div class="text-xs text-gray-600">İyi</div>
+                            <div class="text-xs text-gray-500 mt-1">14:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800 text-sm">1 Saat</div>
+                            <div class="text-2xl my-2">😊</div>
+                            <div class="text-xl font-bold text-green-600">44</div>
+                            <div class="text-xs text-gray-600">İyi</div>
+                            <div class="text-xs text-gray-500 mt-1">15:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800 text-sm">3 Saat</div>
+                            <div class="text-2xl my-2">😊</div>
+                            <div class="text-xl font-bold text-green-600">48</div>
+                            <div class="text-xs text-gray-600">İyi</div>
+                            <div class="text-xs text-gray-500 mt-1">17:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div class="font-semibold text-gray-800 text-sm">6 Saat</div>
+                            <div class="text-2xl my-2">😐</div>
+                            <div class="text-xl font-bold text-yellow-600">58</div>
+                            <div class="text-xs text-gray-600">Orta</div>
+                            <div class="text-xs text-gray-500 mt-1">20:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div class="font-semibold text-gray-800 text-sm">9 Saat</div>
+                            <div class="text-2xl my-2">😐</div>
+                            <div class="text-xl font-bold text-yellow-600">62</div>
+                            <div class="text-xs text-gray-600">Orta</div>
+                            <div class="text-xs text-gray-500 mt-1">23:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800 text-sm">12 Saat</div>
+                            <div class="text-2xl my-2">😊</div>
+                            <div class="text-xl font-bold text-green-600">45</div>
+                            <div class="text-xs text-gray-600">İyi</div>
+                            <div class="text-xs text-gray-500 mt-1">02:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800 text-sm">18 Saat</div>
+                            <div class="text-2xl my-2">😊</div>
+                            <div class="text-xl font-bold text-green-600">41</div>
+                            <div class="text-xs text-gray-600">İyi</div>
+                            <div class="text-xs text-gray-500 mt-1">08:00</div>
+                        </div>
+                        
+                        <div class="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800 text-sm">24 Saat</div>
+                            <div class="text-2xl my-2">😊</div>
+                            <div class="text-xl font-bold text-green-600">38</div>
+                            <div class="text-xs text-gray-600">İyi</div>
+                            <div class="text-xs text-gray-500 mt-1">14:00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7-Day Forecast -->
+                <div id="dailyForecast" class="forecast-content hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-7 gap-4">
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800">Bugün</div>
+                            <div class="text-3xl my-2">😊</div>
+                            <div class="text-2xl font-bold text-green-600">42</div>
+                            <div class="text-sm text-gray-600">İyi</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800">Yarın</div>
+                            <div class="text-3xl my-2">😊</div>
+                            <div class="text-2xl font-bold text-green-600">38</div>
+                            <div class="text-sm text-gray-600">İyi</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div class="font-semibold text-gray-800">Pzt</div>
+                            <div class="text-3xl my-2">😐</div>
+                            <div class="text-2xl font-bold text-yellow-600">65</div>
+                            <div class="text-sm text-gray-600">Orta</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <div class="font-semibold text-gray-800">Sal</div>
+                            <div class="text-3xl my-2">😐</div>
+                            <div class="text-xl font-bold text-yellow-600">72</div>
+                            <div class="text-sm text-gray-600">Orta</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800">Çar</div>
+                            <div class="text-3xl my-2">😊</div>
+                            <div class="text-2xl font-bold text-green-600">45</div>
+                            <div class="text-sm text-gray-600">İyi</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800">Per</div>
+                            <div class="text-3xl my-2">😊</div>
+                            <div class="text-2xl font-bold text-green-600">41</div>
+                            <div class="text-sm text-gray-600">İyi</div>
+                        </div>
+                        
+                        <div class="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                            <div class="font-semibold text-gray-800">Cum</div>
+                            <div class="text-3xl my-2">😊</div>
+                            <div class="text-2xl font-bold text-green-600">39</div>
+                            <div class="text-sm text-gray-600">İyi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Forecast Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Detaylı Tahmin Grafiği</h3>
+                <canvas id="forecastChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Health & Alerts Section -->
+        <div id="alertsSection" class="section hidden">
+            <div class="space-y-6">
+                
+                <!-- Health Recommendations and Impact -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Health Recommendations -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-6">Sağlık Önerileri</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="text-2xl">🏃‍♂️</span>
+                                    <h4 class="font-semibold text-green-800">Dış Aktiviteler</h4>
+                                </div>
+                                <p class="text-green-700 text-sm">Hava kalitesi iyi. Dış spor ve aktiviteler için ideal.</p>
+                            </div>
+                            
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="text-2xl">🪟</span>
+                                    <h4 class="font-semibold text-blue-800">Pencere Açma</h4>
+                                </div>
+                                <p class="text-blue-700 text-sm">Havalandırma için pencereleri açabilirsiniz.</p>
+                            </div>
+                            
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <span class="text-2xl">👶</span>
+                                    <h4 class="font-semibold text-purple-800">Hassas Gruplar</h4>
+                                </div>
+                                <p class="text-purple-700 text-sm">Çocuklar ve yaşlılar için güvenli.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Health Impact -->
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Sağlık Etkileri</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">🫁</span>
+                                    <span class="font-medium">Solunum</span>
+                                </div>
+                                <div class="text-green-600 font-semibold">Düşük Risk</div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">❤️</span>
+                                    <span class="font-medium">Kalp</span>
+                                </div>
+                                <div class="text-green-600 font-semibold">Düşük Risk</div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">👁️</span>
+                                    <span class="font-medium">Göz İrritasyonu</span>
+                                </div>
+                                <div class="text-green-600 font-semibold">Düşük Risk</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Protection Tips -->
+                        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-semibold text-blue-800 mb-2">Korunma İpuçları</h4>
+                            <ul class="text-blue-700 text-sm space-y-1">
+                                <li>• Bol su için</li>
+                                <li>• Düzenli egzersiz yapın</li>
+                                <li>• Hava kalitesi değişimlerini takip edin</li>
+                                <li>• Kapalı alanlarda hava temizleyici kullanın</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="fixed top-20 right-4 z-50 space-y-2"></div>
+
+    <!-- Live Data Indicator -->
+    <div class="fixed bottom-4 right-4 bg-white rounded-full shadow-lg p-3 flex items-center gap-2">
+        <div class="w-3 h-3 bg-green-500 rounded-full pulse-dot"></div>
+        <span class="text-sm font-medium text-gray-700">Canlı Veri</span>
+    </div>
+
+    <script>
+        let map;
+        let currentChart;
+        let forecastChart;
+        let previousAQI = 38; // Store previous AQI for trend calculation
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            createCharts();
+            startDataUpdates();
+            requestNotificationPermission();
+        });
+        
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + 'Section').classList.remove('hidden');
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'bg-opacity-20');
+            });
+            event.target.classList.add('bg-white', 'bg-opacity-20');
+            
+            // Initialize map if map section is shown
+            if (sectionName === 'map' && map) {
+                setTimeout(() => map.invalidateSize(), 100);
+            }
+        }
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Map functions
+        function initializeMap() {
+            map = L.map('map').setView([39.8283, -98.5795], 4); // North America center coordinates
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Add sample air quality markers for North American cities
+            const locations = [
+                {lat: 40.7128, lng: -74.0060, aqi: 65, name: 'New York City'},
+                {lat: 34.0522, lng: -118.2437, aqi: 89, name: 'Los Angeles'},
+                {lat: 41.8781, lng: -87.6298, aqi: 42, name: 'Chicago'},
+                {lat: 29.7604, lng: -95.3698, aqi: 78, name: 'Houston'},
+                {lat: 33.4484, lng: -112.0740, aqi: 95, name: 'Phoenix'},
+                {lat: 39.7392, lng: -104.9903, aqi: 38, name: 'Denver'},
+                {lat: 47.6062, lng: -122.3321, aqi: 45, name: 'Seattle'},
+                {lat: 25.7617, lng: -80.1918, aqi: 52, name: 'Miami'},
+                {lat: 43.6532, lng: -79.3832, aqi: 48, name: 'Toronto'},
+                {lat: 45.5017, lng: -73.5673, aqi: 35, name: 'Montreal'},
+                {lat: 49.2827, lng: -123.1207, aqi: 41, name: 'Vancouver'},
+                {lat: 19.4326, lng: -99.1332, aqi: 112, name: 'Mexico City'},
+                {lat: 32.7767, lng: -96.7970, aqi: 68, name: 'Dallas'},
+                {lat: 37.7749, lng: -122.4194, aqi: 58, name: 'San Francisco'},
+                {lat: 42.3601, lng: -71.0589, aqi: 44, name: 'Boston'}
+            ];
+            
+            locations.forEach(location => {
+                const color = getAQIColor(location.aqi);
+                const marker = L.circleMarker([location.lat, location.lng], {
+                    radius: 15,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map);
+                
+                marker.bindPopup(`
+                    <div class="text-center">
+                        <h3 class="font-bold">${location.name}</h3>
+                        <p class="text-lg">AQI: ${location.aqi}</p>
+                        <p class="text-sm">${getAQIStatus(location.aqi)}</p>
+                    </div>
+                `);
+            });
+        }
+        
+        function getAQIColor(aqi) {
+            if (aqi <= 50) return '#22c55e';      // Yeşil - İyi
+            if (aqi <= 100) return '#eab308';     // Sarı - Orta
+            if (aqi <= 150) return '#ef4444';     // Kırmızı - Kötü
+            if (aqi <= 200) return '#8b5cf6';     // Mor - Tehlikeli
+            if (aqi <= 300) return '#7c3aed';     // Koyu Mor - Çok Tehlikeli
+            return '#581c87';                     // En Koyu Mor - Aşırı Tehlikeli
+        }
+        
+        function getAQIStatus(aqi) {
+            if (aqi <= 50) return 'İyi';
+            if (aqi <= 100) return 'Orta';
+            if (aqi <= 150) return 'Sağlıksız';
+            if (aqi <= 200) return 'Çok Sağlıksız';
+            if (aqi <= 300) return 'Tehlikeli';
+            return 'Çok Tehlikeli';
+        }
+        
+        function filterMap(pollutant) {
+            // Update filter buttons
+            event.target.parentElement.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-gray-200', 'text-gray-700');
+            event.target.classList.add('bg-blue-600', 'text-white');
+            
+            // Here you would filter the map markers based on the selected pollutant
+            showNotification(`Harita ${pollutant === 'all' ? 'tüm kirleticiler' : pollutant} için filtrelendi`, 'info');
+        }
+        
+        // Chart functions
+        function createCharts() {
+            // AQI Trend Chart
+            const ctx1 = document.getElementById('aqiChart').getContext('2d');
+            currentChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [{
+                        label: 'AQI',
+                        data: [35, 32, 45, 52, 48, 42, 38],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Forecast Chart - 1 Week AQI Only
+            const ctx2 = document.getElementById('forecastChart').getContext('2d');
+            forecastChart = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['Bugün', 'Yarın', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'],
+                    datasets: [{
+                        label: 'AQI Tahmini',
+                        data: [42, 38, 65, 72, 45, 41, 39],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 3,
+                        pointRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: '1 Haftalık AQI Tahmini',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: 20
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'AQI Değeri',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Günler',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    elements: {
+                        line: {
+                            borderWidth: 4
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Predefined North American cities with their data
+        const northAmericanCities = {
+            // USA
+            'new york': { name: 'New York City, NY, ABD', lat: 40.7128, lng: -74.0060, aqi: 65, pm10: 25, no2: 32, o3: 78, so2: 12, co: 0.9, humidity: 68, precipitation: 0, pressure: 1013 },
+            'los angeles': { name: 'Los Angeles, CA, ABD', lat: 34.0522, lng: -118.2437, aqi: 89, pm10: 35, no2: 45, o3: 95, so2: 18, co: 1.2, humidity: 55, precipitation: 0, pressure: 1018 },
+            'chicago': { name: 'Chicago, IL, ABD', lat: 41.8781, lng: -87.6298, aqi: 42, pm10: 18, no2: 25, o3: 68, so2: 8, co: 0.7, humidity: 72, precipitation: 2, pressure: 1009 },
+            'houston': { name: 'Houston, TX, ABD', lat: 29.7604, lng: -95.3698, aqi: 78, pm10: 28, no2: 38, o3: 85, so2: 15, co: 1.0, humidity: 78, precipitation: 0, pressure: 1015 },
+            'phoenix': { name: 'Phoenix, AZ, ABD', lat: 33.4484, lng: -112.0740, aqi: 95, pm10: 42, no2: 48, o3: 102, so2: 20, co: 1.3, humidity: 35, precipitation: 0, pressure: 1020 },
+            'denver': { name: 'Denver, CO, ABD', lat: 39.7392, lng: -104.9903, aqi: 38, pm10: 15, no2: 22, o3: 65, so2: 6, co: 0.6, humidity: 45, precipitation: 0, pressure: 1025 },
+            'seattle': { name: 'Seattle, WA, ABD', lat: 47.6062, lng: -122.3321, aqi: 45, pm10: 20, no2: 28, o3: 72, so2: 9, co: 0.8, humidity: 82, precipitation: 5, pressure: 1008 },
+            'miami': { name: 'Miami, FL, ABD', lat: 25.7617, lng: -80.1918, aqi: 52, pm10: 22, no2: 30, o3: 75, so2: 11, co: 0.8, humidity: 85, precipitation: 0, pressure: 1016 },
+            'dallas': { name: 'Dallas, TX, ABD', lat: 32.7767, lng: -96.7970, aqi: 68, pm10: 26, no2: 35, o3: 82, so2: 13, co: 0.9, humidity: 62, precipitation: 0, pressure: 1017 },
+            'san francisco': { name: 'San Francisco, CA, ABD', lat: 37.7749, lng: -122.4194, aqi: 58, pm10: 23, no2: 31, o3: 76, so2: 10, co: 0.8, humidity: 75, precipitation: 0, pressure: 1012 },
+            'boston': { name: 'Boston, MA, ABD', lat: 42.3601, lng: -71.0589, aqi: 44, pm10: 19, no2: 26, o3: 70, so2: 8, co: 0.7, humidity: 69, precipitation: 1, pressure: 1011 },
+            'atlanta': { name: 'Atlanta, GA, ABD', lat: 33.7490, lng: -84.3880, aqi: 61, pm10: 24, no2: 33, o3: 79, so2: 12, co: 0.9, humidity: 71, precipitation: 0, pressure: 1014 },
+            'las vegas': { name: 'Las Vegas, NV, ABD', lat: 36.1699, lng: -115.1398, aqi: 72, pm10: 27, no2: 36, o3: 84, so2: 14, co: 1.0, humidity: 28, precipitation: 0, pressure: 1022 },
+            'portland': { name: 'Portland, OR, ABD', lat: 45.5152, lng: -122.6784, aqi: 41, pm10: 17, no2: 24, o3: 67, so2: 7, co: 0.6, humidity: 79, precipitation: 3, pressure: 1007 },
+            
+            // Canada
+            'toronto': { name: 'Toronto, ON, Kanada', lat: 43.6532, lng: -79.3832, aqi: 48, pm10: 21, no2: 29, o3: 73, so2: 9, co: 0.7, humidity: 65, precipitation: 0, pressure: 1010 },
+            'montreal': { name: 'Montreal, QC, Kanada', lat: 45.5017, lng: -73.5673, aqi: 35, pm10: 14, no2: 20, o3: 62, so2: 5, co: 0.5, humidity: 58, precipitation: 0, pressure: 1012 },
+            'vancouver': { name: 'Vancouver, BC, Kanada', lat: 49.2827, lng: -123.1207, aqi: 41, pm10: 18, no2: 25, o3: 68, so2: 7, co: 0.6, humidity: 81, precipitation: 4, pressure: 1006 },
+            'calgary': { name: 'Calgary, AB, Kanada', lat: 51.0447, lng: -114.0719, aqi: 39, pm10: 16, no2: 23, o3: 66, so2: 6, co: 0.6, humidity: 52, precipitation: 0, pressure: 1019 },
+            'ottawa': { name: 'Ottawa, ON, Kanada', lat: 45.4215, lng: -75.6972, aqi: 36, pm10: 15, no2: 21, o3: 64, so2: 5, co: 0.5, humidity: 61, precipitation: 0, pressure: 1013 },
+            'edmonton': { name: 'Edmonton, AB, Kanada', lat: 53.5461, lng: -113.4938, aqi: 43, pm10: 19, no2: 26, o3: 69, so2: 8, co: 0.7, humidity: 56, precipitation: 0, pressure: 1016 },
+            'winnipeg': { name: 'Winnipeg, MB, Kanada', lat: 49.8951, lng: -97.1384, aqi: 37, pm10: 16, no2: 22, o3: 65, so2: 6, co: 0.6, humidity: 59, precipitation: 0, pressure: 1014 },
+            
+            // Mexico
+            'mexico city': { name: 'Mexico City, Meksika', lat: 19.4326, lng: -99.1332, aqi: 112, pm10: 48, no2: 55, o3: 125, so2: 25, co: 1.8, humidity: 45, precipitation: 0, pressure: 1023 },
+            'guadalajara': { name: 'Guadalajara, Jalisco, Meksika', lat: 20.6597, lng: -103.3496, aqi: 85, pm10: 33, no2: 42, o3: 92, so2: 18, co: 1.3, humidity: 52, precipitation: 0, pressure: 1021 },
+            'monterrey': { name: 'Monterrey, Nuevo León, Meksika', lat: 25.6866, lng: -100.3161, aqi: 78, pm10: 29, no2: 38, o3: 86, so2: 16, co: 1.1, humidity: 48, precipitation: 0, pressure: 1019 },
+            'tijuana': { name: 'Tijuana, Baja California, Meksika', lat: 32.5149, lng: -117.0382, aqi: 82, pm10: 31, no2: 40, o3: 89, so2: 17, co: 1.2, humidity: 58, precipitation: 0, pressure: 1017 },
+            'cancun': { name: 'Cancún, Quintana Roo, Meksika', lat: 21.1619, lng: -86.8515, aqi: 56, pm10: 23, no2: 31, o3: 77, so2: 11, co: 0.8, humidity: 88, precipitation: 0, pressure: 1015 }
+        };
+
+        // Search and location functions
+        function searchLocation() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (query) {
+                showNotification(`"${query}" için arama yapılıyor...`, 'info');
+                
+                // Search in predefined cities
+                const cityKey = Object.keys(northAmericanCities).find(key => 
+                    key.includes(query) || northAmericanCities[key].name.toLowerCase().includes(query)
+                );
+                
+                if (cityKey) {
+                    const cityData = northAmericanCities[cityKey];
+                    setTimeout(() => {
+                        updateLocationWithCityData(cityData);
+                        showNotification(`${cityData.name} için veri güncellendi`, 'success');
+                        
+                        // Update map view
+                        if (map) {
+                            map.setView([cityData.lat, cityData.lng], 10);
+                        }
+                    }, 1000);
+                } else {
+                    setTimeout(() => {
+                        showNotification('Şehir bulunamadı. Lütfen Kuzey Amerika şehirlerinden birini deneyin.', 'warning');
+                        showAvailableCities();
+                    }, 1000);
+                }
+            }
+        }
+        
+        function showAvailableCities() {
+            const cities = Object.values(northAmericanCities).map(city => city.name).slice(0, 10);
+            const cityList = cities.join(', ');
+            showNotification(`Mevcut şehirler: ${cityList}...`, 'info');
+        }
+        
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                showNotification('Gerçek konumunuz alınıyor...', 'info');
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        
+                        // Generate realistic air quality data based on location
+                        const locationData = {
+                            name: `Mevcut Konumunuz (${lat.toFixed(4)}, ${lng.toFixed(4)})`,
+                            lat: lat,
+                            lng: lng,
+                            aqi: Math.floor(Math.random() * 80) + 20, // 20-100 range
+                            pm10: Math.floor(Math.random() * 35) + 10,
+                            no2: Math.floor(Math.random() * 40) + 15,
+                            o3: Math.floor(Math.random() * 50) + 50,
+                            so2: Math.floor(Math.random() * 15) + 5,
+                            co: (Math.random() * 1.0 + 0.5).toFixed(1),
+                            humidity: Math.floor(Math.random() * 60) + 30, // 30-90%
+                            precipitation: Math.floor(Math.random() * 10), // 0-10mm
+                            pressure: Math.floor(Math.random() * 30) + 1000 // 1000-1030 hPa
+                        };
+                        
+                        updateLocationWithCityData(locationData);
+                        showNotification('Gerçek konumunuz için hava kalitesi verileri alındı', 'success');
+                        
+                        if (map) {
+                            map.setView([lat, lng], 12);
+                            
+                            // Add a special marker for current location
+                            L.marker([lat, lng], {
+                                icon: L.divIcon({
+                                    className: 'current-location-marker',
+                                    html: '<div style="background: #3b82f6; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                                    iconSize: [20, 20],
+                                    iconAnchor: [10, 10]
+                                })
+                            }).addTo(map).bindPopup(`
+                                <div class="text-center">
+                                    <h3 class="font-bold">Mevcut Konumunuz</h3>
+                                    <p class="text-lg">AQI: ${locationData.aqi}</p>
+                                    <p class="text-sm">${getAQIStatus(locationData.aqi)}</p>
+                                </div>
+                            `);
+                        }
+                    },
+                    (error) => {
+                        let errorMessage = 'Konum alınamadı';
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage = 'Konum izni reddedildi';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage = 'Konum bilgisi mevcut değil';
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage = 'Konum alma zaman aşımı';
+                                break;
+                        }
+                        showNotification(errorMessage, 'error');
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 300000 // 5 minutes
+                    }
+                );
+            } else {
+                showNotification('Tarayıcınız konum servisini desteklemiyor', 'error');
+            }
+        }
+        
+        function updateLocationWithCityData(cityData) {
+            document.getElementById('currentLocation').textContent = `📍 ${cityData.name}`;
+            
+            // Update previous AQI for trend calculation
+            previousAQI = parseInt(document.getElementById('aqiValue').textContent) || 38;
+            
+            updateAQIDisplay(cityData.aqi);
+            updateTrendDisplay(previousAQI, cityData.aqi);
+            
+            // Update pollutant values
+            document.getElementById('pm10').textContent = cityData.pm10;
+            document.getElementById('no2').textContent = cityData.no2;
+            document.getElementById('o3').textContent = cityData.o3;
+            document.getElementById('so2').textContent = cityData.so2;
+            document.getElementById('co').textContent = cityData.co;
+            
+            // Update weather data
+            if (cityData.humidity !== undefined) {
+                document.getElementById('humidity').textContent = cityData.humidity + '%';
+            }
+            if (cityData.precipitation !== undefined) {
+                document.getElementById('precipitation').textContent = cityData.precipitation + ' mm';
+            }
+            if (cityData.pressure !== undefined) {
+                document.getElementById('pressure').textContent = cityData.pressure + ' hPa';
+            }
+            
+            // Show air quality alerts for new location
+            setTimeout(() => {
+                checkAirQualityAndShowAlerts();
+            }, 1000);
+        }
+        
+        function updateTrendDisplay(oldAQI, newAQI) {
+            const trendValue = document.getElementById('trendValue');
+            const trendDescription = document.getElementById('trendDescription');
+            
+            const difference = newAQI - oldAQI;
+            let arrow, color, description;
+            
+            if (difference > 0) {
+                arrow = '↗️';
+                color = difference > 10 ? 'text-red-600' : 'text-yellow-600';
+                description = 'Hava kalitesi kötüleşiyor';
+            } else if (difference < 0) {
+                arrow = '↘️';
+                color = 'text-green-600';
+                description = 'Hava kalitesi iyileşiyor';
+            } else {
+                arrow = '→';
+                color = 'text-blue-600';
+                description = 'Hava kalitesi stabil';
+            }
+            
+            trendValue.textContent = `${arrow} ${oldAQI}→${newAQI}`;
+            trendValue.className = `text-3xl font-bold ${color} mt-2`;
+            trendDescription.textContent = description;
+        }
+        
+        function updateLocationData(location) {
+            document.getElementById('currentLocation').textContent = `📍 ${location}`;
+            
+            // Simulate new data
+            const newAQI = Math.floor(Math.random() * 100) + 20;
+            updateAQIDisplay(newAQI);
+        }
+        
+        function updateAQIDisplay(aqi) {
+            document.getElementById('aqiValue').textContent = aqi;
+            document.getElementById('aqiStatus').textContent = getAQIStatus(aqi);
+            
+            const circle = document.getElementById('aqiCircle');
+            const value = document.getElementById('aqiValue');
+            const status = document.getElementById('aqiStatus');
+            
+            // Remove all AQI classes
+            circle.className = circle.className.replace(/air-quality-\w+/g, '');
+            
+            // Add appropriate class and update colors
+            if (aqi <= 50) {
+                circle.classList.add('air-quality-good');
+                value.className = 'text-6xl font-bold text-green-600';
+                status.className = 'text-xl font-semibold text-green-600';
+                circle.innerHTML = '<div class="text-center"><div class="text-2xl">😊</div><div class="text-xs">İyi</div></div>';
+            } else if (aqi <= 100) {
+                circle.classList.add('air-quality-moderate');
+                value.className = 'text-6xl font-bold text-yellow-600';
+                status.className = 'text-xl font-semibold text-yellow-600';
+                circle.innerHTML = '<div class="text-center"><div class="text-2xl">😐</div><div class="text-xs">Orta</div></div>';
+            } else if (aqi <= 150) {
+                circle.classList.add('air-quality-unhealthy');
+                value.className = 'text-6xl font-bold text-red-600';
+                status.className = 'text-xl font-semibold text-red-600';
+                circle.innerHTML = '<div class="text-center"><div class="text-2xl">😷</div><div class="text-xs">Kötü</div></div>';
+            } else {
+                circle.classList.add('air-quality-very-unhealthy');
+                value.className = 'text-6xl font-bold text-purple-600';
+                status.className = 'text-xl font-semibold text-purple-600';
+                circle.innerHTML = '<div class="text-center"><div class="text-2xl">☠️</div><div class="text-xs">Tehlikeli</div></div>';
+            }
+        }
+        
+        // Notification functions
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            notification.className = `${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg notification-slide max-w-sm`;
+            notification.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium">${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-3 text-white hover:text-gray-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        // Data update simulation
+        function startDataUpdates() {
+            setInterval(() => {
+                // Simulate real-time data updates
+                const variation = (Math.random() - 0.5) * 10;
+                const currentAQI = parseInt(document.getElementById('aqiValue').textContent);
+                const newAQI = Math.max(20, Math.min(150, currentAQI + variation));
+                
+                // Update trend before updating display
+                updateTrendDisplay(currentAQI, Math.round(newAQI));
+                updateAQIDisplay(Math.round(newAQI));
+                
+                // Update pollutant values
+                document.getElementById('pm10').textContent = Math.round(15 + Math.random() * 15);
+                document.getElementById('no2').textContent = Math.round(20 + Math.random() * 20);
+                document.getElementById('o3').textContent = Math.round(70 + Math.random() * 30);
+                document.getElementById('so2').textContent = Math.round(5 + Math.random() * 10);
+                document.getElementById('co').textContent = (0.5 + Math.random() * 0.8).toFixed(1);
+                
+                // Update weather data
+                document.getElementById('humidity').textContent = Math.round(50 + Math.random() * 30) + '%';
+                document.getElementById('precipitation').textContent = Math.round(Math.random() * 5) + ' mm';
+                document.getElementById('pressure').textContent = Math.round(1005 + Math.random() * 20) + ' hPa';
+                
+                // Update chart data
+                if (currentChart) {
+                    const data = currentChart.data.datasets[0].data;
+                    data.shift();
+                    data.push(newAQI);
+                    currentChart.update('none');
+                }
+                
+            }, 30000); // Update every 30 seconds
+        }
+        
+        // Search suggestions functionality
+        function showSearchSuggestions(query) {
+            const suggestions = document.getElementById('searchSuggestions');
+            if (!query.trim()) {
+                suggestions.classList.add('hidden');
+                return;
+            }
+            
+            const filteredCities = Object.values(northAmericanCities).filter(city =>
+                city.name.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 8);
+            
+            if (filteredCities.length > 0) {
+                suggestions.innerHTML = filteredCities.map(city => `
+                    <div class="px-4 py-2 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0" 
+                         onclick="selectCity('${city.name}')">
+                        <div class="font-medium text-gray-800">${city.name}</div>
+                        <div class="text-sm text-gray-500">AQI: ${city.aqi} - ${getAQIStatus(city.aqi)}</div>
+                    </div>
+                `).join('');
+                suggestions.classList.remove('hidden');
+            } else {
+                suggestions.classList.add('hidden');
+            }
+        }
+        
+        function selectCity(cityName) {
+            document.getElementById('searchInput').value = cityName;
+            document.getElementById('searchSuggestions').classList.add('hidden');
+            
+            // Find and update with city data
+            const cityKey = Object.keys(northAmericanCities).find(key => 
+                northAmericanCities[key].name === cityName
+            );
+            
+            if (cityKey) {
+                const cityData = northAmericanCities[cityKey];
+                updateLocationWithCityData(cityData);
+                showNotification(`${cityData.name} seçildi`, 'success');
+                
+                if (map) {
+                    map.setView([cityData.lat, cityData.lng], 10);
+                }
+            }
+        }
+        
+        // Handle search input events
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            showSearchSuggestions(e.target.value);
+        });
+        
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchLocation();
+                document.getElementById('searchSuggestions').classList.add('hidden');
+            }
+        });
+        
+        document.getElementById('searchInput').addEventListener('focus', function(e) {
+            if (e.target.value.trim()) {
+                showSearchSuggestions(e.target.value);
+            }
+        });
+        
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#searchInput') && !e.target.closest('#searchSuggestions')) {
+                document.getElementById('searchSuggestions').classList.add('hidden');
+            }
+        });
+        
+        // Forecast toggle function
+        function toggleForecast(type) {
+            const hourlyBtn = document.getElementById('hourlyBtn');
+            const dailyBtn = document.getElementById('dailyBtn');
+            const hourlyForecast = document.getElementById('hourlyForecast');
+            const dailyForecast = document.getElementById('dailyForecast');
+            
+            if (type === 'hourly') {
+                // Show hourly forecast
+                hourlyForecast.classList.remove('hidden');
+                dailyForecast.classList.add('hidden');
+                
+                // Update button styles
+                hourlyBtn.className = 'px-4 py-2 rounded-md bg-blue-600 text-white font-medium transition-colors';
+                dailyBtn.className = 'px-4 py-2 rounded-md text-gray-600 font-medium hover:text-gray-800 transition-colors';
+                
+                // Update forecast chart to show 24-hour data
+                updateForecastChart('hourly');
+                
+                showNotification('24 saatlik tahmin görüntüleniyor', 'info');
+            } else {
+                // Show daily forecast
+                hourlyForecast.classList.add('hidden');
+                dailyForecast.classList.remove('hidden');
+                
+                // Update button styles
+                dailyBtn.className = 'px-4 py-2 rounded-md bg-blue-600 text-white font-medium transition-colors';
+                hourlyBtn.className = 'px-4 py-2 rounded-md text-gray-600 font-medium hover:text-gray-800 transition-colors';
+                
+                // Update forecast chart to show 7-day data
+                updateForecastChart('daily');
+                
+                showNotification('7 günlük tahmin görüntüleniyor', 'info');
+            }
+        }
+        
+        // Function to update forecast chart based on selected period
+        function updateForecastChart(type) {
+            if (!forecastChart) return;
+            
+            if (type === 'hourly') {
+                // 24-hour forecast data
+                forecastChart.data.labels = ['Şimdi', '3 Saat', '6 Saat', '9 Saat', '12 Saat', '15 Saat', '18 Saat', '21 Saat', '24 Saat'];
+                forecastChart.data.datasets[0].data = [42, 48, 58, 62, 45, 41, 38, 35, 38];
+                forecastChart.data.datasets[0].label = '24 Saatlik AQI Tahmini';
+                forecastChart.options.plugins.title.text = '24 Saatlik AQI Tahmini';
+                forecastChart.options.scales.x.title.text = 'Saatler';
+            } else {
+                // 7-day forecast data
+                forecastChart.data.labels = ['Bugün', 'Yarın', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma'];
+                forecastChart.data.datasets[0].data = [42, 38, 65, 72, 45, 41, 39];
+                forecastChart.data.datasets[0].label = '7 Günlük AQI Tahmini';
+                forecastChart.options.plugins.title.text = '7 Günlük AQI Tahmini';
+                forecastChart.options.scales.x.title.text = 'Günler';
+            }
+            
+            forecastChart.update('active');
+        }
+
+        // Air Quality Alert Functions
+        function showAirQualityAlert(message, level, location = '') {
+            const alertContainer = document.getElementById('airQualityAlerts');
+            const alertId = 'alert-' + Date.now();
+            
+            // Determine alert colors and icons based on air quality level
+            const alertStyles = {
+                good: {
+                    bg: 'bg-green-500 bg-opacity-90',
+                    border: 'border-green-400',
+                    icon: '✅',
+                    text: 'text-white'
+                },
+                moderate: {
+                    bg: 'bg-yellow-500 bg-opacity-90',
+                    border: 'border-yellow-400',
+                    icon: '⚠️',
+                    text: 'text-white'
+                },
+                unhealthy: {
+                    bg: 'bg-red-500 bg-opacity-90',
+                    border: 'border-red-400',
+                    icon: '🚨',
+                    text: 'text-white'
+                },
+                hazardous: {
+                    bg: 'bg-purple-600 bg-opacity-90',
+                    border: 'border-purple-500',
+                    icon: '☠️',
+                    text: 'text-white'
+                }
+            };
+            
+            const style = alertStyles[level] || alertStyles.moderate;
+            
+            const alertElement = document.createElement('div');
+            alertElement.id = alertId;
+            alertElement.className = `${style.bg} ${style.border} ${style.text} border-2 rounded-lg shadow-lg p-4 notification-slide backdrop-blur-sm`;
+            
+            alertElement.innerHTML = `
+                <div class="flex items-start justify-between gap-3">
+                    <div class="flex items-start gap-3 flex-1">
+                        <div class="text-xl mt-0.5">${style.icon}</div>
+                        <div class="flex-1">
+                            <div class="font-semibold text-sm mb-1">Hava Kalitesi Uyarısı</div>
+                            ${location ? `<div class="text-xs opacity-90 mb-1">📍 ${location}</div>` : ''}
+                            <div class="text-sm">${message}</div>
+                            <div class="text-xs opacity-75 mt-2">${new Date().toLocaleTimeString('tr-TR')}</div>
+                        </div>
+                    </div>
+                    <button onclick="removeAirQualityAlert('${alertId}')" 
+                            class="text-white hover:text-gray-200 transition-colors ml-2 mt-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            alertContainer.appendChild(alertElement);
+            
+            // Auto remove after 15 seconds for non-critical alerts
+            if (level === 'good' || level === 'moderate') {
+                setTimeout(() => {
+                    removeAirQualityAlert(alertId);
+                }, 15000);
+            }
+            
+            // Show browser notification for critical alerts
+            if ((level === 'unhealthy' || level === 'hazardous') && 'Notification' in window && Notification.permission === 'granted') {
+                new Notification('TEMPO - Kritik Hava Kalitesi Uyarısı', {
+                    body: message,
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23ef4444"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="20">🚨</text></svg>'
+                });
+            }
+        }
+        
+        function removeAirQualityAlert(alertId) {
+            const alert = document.getElementById(alertId);
+            if (alert) {
+                alert.style.transform = 'translateX(100%)';
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    if (alert.parentElement) {
+                        alert.remove();
+                    }
+                }, 300);
+            }
+        }
+        
+        function checkAirQualityAndShowAlerts() {
+            const currentAQI = parseInt(document.getElementById('aqiValue').textContent);
+            const location = document.getElementById('currentLocation').textContent.replace('📍 ', '');
+            
+            // Clear existing alerts when location changes
+            const alertContainer = document.getElementById('airQualityAlerts');
+            alertContainer.innerHTML = '';
+            
+            if (currentAQI <= 50) {
+                showAirQualityAlert('Hava kalitesi iyi seviyede. Dış aktiviteler için uygun.', 'good', location);
+            } else if (currentAQI <= 100) {
+                showAirQualityAlert('Hava kalitesi orta seviyede. Hassas kişiler dikkatli olmalı.', 'moderate', location);
+            } else if (currentAQI <= 150) {
+                showAirQualityAlert('Hava kalitesi sağlıksız! Dış aktiviteleri sınırlayın.', 'unhealthy', location);
+            } else {
+                showAirQualityAlert('Hava kalitesi tehlikeli seviyede! Dışarı çıkmayın.', 'hazardous', location);
+            }
+            
+            // Additional specific alerts based on pollutant levels
+            const pm10 = parseInt(document.getElementById('pm10').textContent);
+            const no2 = parseInt(document.getElementById('no2').textContent);
+            const o3 = parseInt(document.getElementById('o3').textContent);
+            
+            setTimeout(() => {
+                if (pm10 > 50) {
+                    showAirQualityAlert('PM10 seviyeleri yüksek. Maske kullanımı önerilir.', 'unhealthy', location);
+                }
+                
+                if (no2 > 40) {
+                    showAirQualityAlert('NO₂ seviyeleri yüksek. Trafik yoğun bölgelerden kaçının.', 'moderate', location);
+                }
+                
+                if (o3 > 100) {
+                    showAirQualityAlert('Ozon seviyeleri yüksek. Öğle saatlerinde dışarı çıkmayın.', 'unhealthy', location);
+                }
+            }, 2000);
+        }
+        
+        // Simulate air quality alerts and monitoring
+        setTimeout(() => {
+            checkAirQualityAndShowAlerts();
+        }, 3000);
+        
+        // Check for alerts when AQI changes significantly
+        let lastCheckedAQI = 42;
+        setInterval(() => {
+            const currentAQI = parseInt(document.getElementById('aqiValue').textContent);
+            if (Math.abs(currentAQI - lastCheckedAQI) > 10) {
+                setTimeout(() => {
+                    checkAirQualityAndShowAlerts();
+                }, 1000);
+                lastCheckedAQI = currentAQI;
+            }
+        }, 5000);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97e7bc8f4121d21d',t:'MTc1Nzc2NzQ3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
