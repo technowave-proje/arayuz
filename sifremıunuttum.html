@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEMPO-Şifremi Unuttum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #568ad3 0%, #568ad3 50%, #568ad3 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                        <span class="text-2xl"></span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">TEMP-🌏</h1>
+                        <p class="text-xs opacity-90">Hava Kalitesi İzleme</p>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="p-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Şifre Yenileme Box -->
+    <div class="flex-1 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-8">Şifremi Unuttum</h2>
+            
+            <div class="space-y-6">
+                <!-- Yeni Şifre -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Yeni Şifre
+                    </label>
+                    <input 
+                        type="password" 
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-gray-700"
+                    >
+                </div>
+
+                <!-- Yeni Şifre Tekrar -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Yeni Şifre Tekrar
+                    </label>
+                    <input 
+                        type="password" 
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-gray-700"
+                    >
+                </div>
+
+                <!-- Buton -->
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 mt-6">
+                    Kaydet
+                </button>
+            </div>
+
+            <!-- Alt Linkler -->
+            <div class="mt-6 text-center space-y-2">
+                <p class="text-sm text-gray-600">
+                    <a href="http://127.0.0.1:5500/girisekran%C4%B1.html" class="text-blue-600 hover:text-blue-800 transition-colors">Giriş Ekranına Dön</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
