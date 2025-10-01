@@ -1,5 +1,7 @@
+<!-- EN GÜNCELİ BUNA BAK -->
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,84 +14,146 @@
         .gradient-bg {
             background: linear-gradient(135deg, #568ad3 0%, #568ad3 50%, #568ad3 100%);
         }
-        .air-quality-excellent { background: linear-gradient(135deg, #10b981, #059669); }
-        .air-quality-good { background: linear-gradient(135deg, #10b981, #059669); }
-        .air-quality-moderate { background: linear-gradient(135deg, #f59e0b, #d97706); }
-        .air-quality-unhealthy { background: linear-gradient(135deg, #f97316, #ea580c); }
-        .air-quality-very-unhealthy { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .air-quality-hazardous { background: linear-gradient(135deg, #7c2d12, #92400e); }
-        
+
+        .air-quality-excellent {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .air-quality-good {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .air-quality-moderate {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .air-quality-unhealthy {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+        }
+
+        .air-quality-very-unhealthy {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .air-quality-hazardous {
+            background: linear-gradient(135deg, #7c2d12, #92400e);
+        }
+
         .notification-slide {
             animation: slideInRight 0.5s ease-out;
         }
-        
+
         @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
-        
+
         .pulse-dot {
             animation: pulse 2s infinite;
         }
-        
+
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         .search-dropdown {
             max-height: 200px;
             overflow-y: auto;
         }
+
+        /* Aktivite container için yeni stil */
+        #activityContainer {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+            width: 100%;
+            overflow: hidden;
+            /* Ekle: Taşma sorununu engeller */
+        }
+
+        #activityContainer>div {
+            flex-shrink: 0;
+            width: 100%;
+
+
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 font-sans min-h-screen">
     <!-- Navigation -->
     <nav class="gradient-bg text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">  <!--EMOJI ARKASI-->
-                        <span class="text-10xl"><img src="" alt=""></span>                                             <!--LOGO-->
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center"> <!--EMOJI ARKASI-->
+                        <span class="text-2xl"></span> <!--LOGO-->
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold">TEMP-🌏</h1>
+                        <h1 class="text-xl font-bold">TEMPO</h1>
                         <p class="text-xs opacity-90">Hava Kalitesi İzleme</p>
                     </div>
                 </div>
-                
+
                 <div class="hidden md:flex space-x-6">
-                    <button onclick="showSection('home')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors flex items-center gap-2">
+                    <button onclick="showSection('home')"
+                        class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors flex items-center gap-2">
                         <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
                         Live
                     </button>
-                    <button onclick="showSection('forecast')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Hava Durumu</button>
-                    <button onclick="showSection('map')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Harita</button>
-                    <button onclick="showSection('alerts')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Bildirimler</button>
-                    <button onclick="showSection('settings')" class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Ayarlar</button>
+                    <button onclick="showSection('forecast')"
+                        class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Hava
+                        Durumu</button>
+                    <button onclick="showSection('map')"
+                        class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Harita</button>
+                    <button onclick="showSection('alerts')"
+                        class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Bildirimler</button>
+                    <button onclick="showSection('settings')"
+                        class="nav-btn px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 transition-colors">Ayarlar</button>
                 </div>
-                
+
                 <div class="md:hidden">
                     <button onclick="toggleMobileMenu()" class="p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-black bg-opacity-20">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <button onclick="showSection('home')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 flex items-center gap-2">
+                <button onclick="showSection('home')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 flex items-center gap-2">
                     <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
                     Live
                 </button>
-                <button onclick="showSection('forecast')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Hava Durumu</button>
-                <button onclick="showSection('map')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Harita</button>
-                <button onclick="showSection('alerts')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Bildirimler</button>
-                <button onclick="showSection('settings')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Ayarlar</button>
+                <button onclick="showSection('forecast')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Hava
+                    Durumu</button>
+                <button onclick="showSection('map')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Harita</button>
+                <button onclick="showSection('alerts')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Bildirimler</button>
+                <button onclick="showSection('settings')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Ayarlar</button>
             </div>
         </div>
     </nav>
@@ -99,28 +163,34 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex flex-col sm:flex-row gap-3">
                 <div class="flex-1 relative">
-                    <input type="text" id="searchInput" placeholder="Şehir ara..." 
-                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           oninput="showSearchSuggestions(this.value)"
-                           onblur="hideSearchSuggestions()"
-                           onfocus="showSearchSuggestions(this.value)">
+                    <input type="text" id="searchInput" placeholder="Şehir ara..."
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        oninput="showSearchSuggestions(this.value)" onblur="hideSearchSuggestions()"
+                        onfocus="showSearchSuggestions(this.value)">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </div>
                     <!-- Search Suggestions Dropdown -->
-                    <div id="searchSuggestions" class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-50 hidden search-dropdown">
+                    <div id="searchSuggestions"
+                        class="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-50 hidden search-dropdown">
                         <!-- Suggestions will be populated here -->
                     </div>
                 </div>
-                <button onclick="searchLocation()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                <button onclick="searchLocation()"
+                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     Ara
                 </button>
-                <button onclick="getCurrentLocation()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+                <button onclick="getCurrentLocation()"
+                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
                     Konumum
                 </button>
@@ -130,7 +200,7 @@
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 py-6">
-        
+
         <!-- Home Section -->
         <div id="homeSection" class="section">
             <!-- Current Air Quality Card -->
@@ -147,45 +217,51 @@
                             </div>
                         </div>
                     </div>
-                    <div id="aqiCircle" class="w-32 h-32 rounded-full air-quality-good flex items-center justify-center text-white font-bold text-lg">
+                    <div id="aqiCircle"
+                        class="w-32 h-32 rounded-full air-quality-good flex items-center justify-center text-white font-bold text-lg">
                         <div class="text-center">
                             <div class="text-2xl"></div> <!--AQI DEGERININ RENK KODUNU GOSTERDIGI YERDEKI EMOJI YERI-->
                             <div class="text-s">Temiz</div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Pollutant Details -->
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mt-6 pt-6 border-t border-gray-200">
                     <div class="text-center relative group cursor-help">
                         <div class="text-2xl font-bold text-black-600" id="pm25">12</div>
                         <div class="text-sm text-gray-600">PM2.5</div>
                         <div class="text-xs text-gray-500">µg/m³</div>
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                           2.5 mikrometreden küçük çok ince toz parçacıkları.
+                        <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            2.5 mikrometreden küçük çok ince toz parçacıkları.
                         </div>
                     </div>
                     <div class="text-center relative group cursor-help">
                         <div class="text-2xl font-bold text-black-600" id="pm10">18</div>
                         <div class="text-sm text-gray-600">PM10</div>
                         <div class="text-xs text-gray-500">µg/m³</div>
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                           10 mikrometreden küçük toz parçacıkları, gözle pek seçilemez.
+                        <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            10 mikrometreden küçük toz parçacıkları, gözle pek seçilemez.
                         </div>
                     </div>
                     <div class="text-center relative group cursor-help">
                         <div class="text-2xl font-bold text-black-600" id="no2">25</div>
                         <div class="text-sm text-gray-600">NO₂</div>
                         <div class="text-xs text-gray-500">µg/m³</div>
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                            Azot dioksit gazı, genellikle araçların egzozlarından ve sanayi faaliyetlerinden ortaya çıkar.
+                        <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            Azot dioksit gazı, genellikle araçların egzozlarından ve sanayi faaliyetlerinden ortaya
+                            çıkar.
                         </div>
                     </div>
                     <div class="text-center relative group cursor-help">
                         <div class="text-2xl font-bold text-black-600" id="o3">85</div>
                         <div class="text-sm text-gray-600">O₃</div>
                         <div class="text-xs text-gray-500">µg/m³</div>
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                        <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
                             Ozon gazı, atmosferde doğal olarak bulunur, özellikle güneşli günlerde artabilir.
                         </div>
                     </div>
@@ -193,8 +269,10 @@
                         <div class="text-2xl font-bold text-black-600" id="co">0.8</div>
                         <div class="text-sm text-gray-600">CO</div>
                         <div class="text-xs text-gray-500">mg/m³</div>
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
-                            Karbon monoksit gazı, tam yanmamış yakıtlardan ortaya çıkar (örneğin araçlar, soba, yangınlar).
+                        <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
+                            Karbon monoksit gazı, tam yanmamış yakıtlardan ortaya çıkar (örneğin araçlar, soba,
+                            yangınlar).
                         </div>
                     </div>
                 </div>
@@ -210,12 +288,12 @@
                             <p class="text-3xl font-bold text-blue-600 mt-2">22°C</p>
                             <p class="text-sm text-gray-600">Parçalı bulutlu</p>
                         </div>
-                        <div class="">                             <!--EMOIJININ ARKASI-->
+                        <div class=""> <!--EMOIJININ ARKASI-->
                             <span class="text-4xl">⛅</span>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
@@ -224,7 +302,8 @@
                                 <p id="humidityValue" class="text-3xl font-bold text-blue-600">68%</p>
                                 <div id="humidityTrend" class="flex items-center text-green-600">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M7 17l9.2-9.2M17 17V7H7"></path>
                                     </svg>
                                     <span class="text-xs ml-1">Yükseliyor</span>
                                 </div>
@@ -236,7 +315,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
@@ -249,7 +328,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Second Row -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
@@ -263,7 +342,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
@@ -276,16 +355,17 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Polen kartı yerine Hissedilen Sıcaklık kartı -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-black-800">Polen</h3>
-                            <p id="pollenValue" class="text-3xl font-bold text-blue-600 mt-2">Orta</p>
-                            <p class="text-sm text-gray-600">Ağaç poleni</p>
+                            <h3 class="text-lg font-semibold text-gray-800">Hissedilen Sıcaklık</h3>
+                            <p id="feelsLikeTemp" class="text-3xl font-bold text-orange-600 mt-2">24°C</p>
+                            <p class="text-sm text-gray-600">Nem ve rüzgar etkisi</p>
                         </div>
                         <div class="">
-                            <span class="text-4xl">🌸</span>
+                            <span class="text-4xl">🌡️</span>
                         </div>
                     </div>
                 </div>
@@ -296,118 +376,91 @@
                 <!-- Activity Suitability -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivite Durumu</h3>
-                    
+
                     <div class="relative h-48 overflow-hidden">
-                        <div id="activityContainer" class="flex h-full transition-transform duration-300 ease-in-out" style="width: max-content;">
+                        <div id="activityContainer" class="flex h-full transition-transform duration-300 ease-in-out"
+                            style="width: max-content;">
                             <!-- Activities will be populated by JavaScript -->
                         </div>
-                        
+
                         <!-- Navigation dots -->
                         <div id="activityDots" class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
                             <!-- Dots will be populated by JavaScript -->
                         </div>
-                        
+
                         <!-- Navigation arrows -->
-                        <button id="prevActivity" onclick="previousActivity()" class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white bg-opacity-80 rounded-full shadow-md flex items-center justify-center hover:bg-opacity-100 transition-all">
+                        <button id="prevActivity" onclick="previousActivity()"
+                            class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white bg-opacity-80 rounded-full shadow-md flex items-center justify-center hover:bg-opacity-100 transition-all">
                             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </button>
-                        <button id="nextActivity" onclick="nextActivity()" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white bg-opacity-80 rounded-full shadow-md flex items-center justify-center hover:bg-opacity-100 transition-all">
+                        <button id="nextActivity" onclick="nextActivity()"
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white bg-opacity-80 rounded-full shadow-md flex items-center justify-center hover:bg-opacity-100 transition-all">
                             <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
+                                </path>
                             </svg>
                         </button>
                     </div>
                 </div>
-
-                <!-- Sunrise & Sunset -->
+                <!-- <!-- Sıcaklık Bilgileri -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <span class="text-4xl">☀️</span>
-                        Güneş Doğum & Batım
-                    </h3>
-                    
                     <div class="space-y-6">
-                        <!-- Sunrise -->
-                        <div class="flex items-center justify-between p-4 bg-gray-200 p-4 rounded-lg border border-gray-300">
-                            <div class="flex items-center gap-3">
+                        <!-- Maksimum Sıcaklık -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800">Maksimum</h3>
+                                    <p id="maxTemp" class="text-3xl font-bold text-red-600 mt-2">28°C</p>
+                                    <p class="text-sm text-gray-600">Bugün için</p>
+                                </div>
                                 <div class="">
-                                    <span class="text-white text-3xl">🌅</span>
+                                    <span class="text-4xl">🔥</span>
                                 </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-800">Güneş Doğumu</h4>
-                                    <p class="text-sm text-gray-600">Bugün</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <div id="sunriseTime" class="text-2xl font-bold text-black-600">06:42</div>
-                                <div class="text-xs text-gray-500">EST</div>
                             </div>
                         </div>
-                        
-                        <!-- Sunset -->
-                        <div class="flex items-center justify-between p-4 bg-gradient-to-r bg-gray-200 p-4 rounded-lg border border-gray-300">
-                            <div class="flex items-center gap-3">
-                                <div class=""> <!--EMOJI ARKASI YUVARLAK-->
-                                    <span class="text-white text-3xl">🌇</span>
-                                </div>
+
+                        <!-- Minimum Sıcaklık -->
+                        <div class="bg-white rounded-xl shadow-lg p-6">
+                            <div class="flex items-center justify-between">
                                 <div>
-                                    <h4 class="font-semibold text-gray-800">Güneş Batımı</h4>
-                                    <p class="text-sm text-gray-600">Bugün</p>
+                                    <h3 class="text-lg font-semibold text-gray-800">Minimum</h3>
+                                    <p id="minTemp" class="text-3xl font-bold text-cyan-600 mt-2">18°C</p>
+                                    <p class="text-sm text-gray-600">Bugün için</p>
                                 </div>
-                            </div>
-                            <div class="text-right">
-                                <div id="sunsetTime" class="text-2xl font-bold text- black-600">16:58</div>
-                                <div class="text-xs text-gray-500">EST</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Current Sun Position -->
-                        <div class="p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg border border-gray-100">
-                            <div class="flex items-center justify-between mb-3">
-                                <h4 class="font-semibold text-gray-800">Güneş Konumu</h4>
-                                <span id="currentSunStatus" class="text-sm font-medium text-gray-600">Gündüz</span>
-                            </div>
-                            <div class="relative">
-                                <div class="w-full h-2 bg-gray-200 rounded-full">
-                                    <div id="sunProgress" class="h-2 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full" style="width: 65%;"></div>
-                                </div>
-                                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                                    <span>Doğum</span>
-                                    <span>Öğle</span>
-                                    <span>Batım</span>
+                                <div class="">
+                                    <span class="text-4xl">❄️</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
+
 
         <!-- Forecast Section -->
         <div id="forecastSection" class="section hidden">
             <!-- Forecast Toggle Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                <button id="forecast7Day" onclick="showForecast('7day')" 
-                        class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium shadow-sm">
-                    7 Günlük Tahmin
+                <button id="forecast5Day" onclick="showForecast('5day')"
+                    class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium shadow-sm">
+                    5 Günlük Tahmin
                 </button>
-                <button id="forecast24Hour" onclick="showForecast('24hour')" 
-                        class="px-6 py-3 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors font-medium">
+                <button id="forecast24Hour" onclick="showForecast('24hour')"
+                    class="px-6 py-3 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors font-medium">
                     24 Saatlik Tahmin
                 </button>
             </div>
-
             <!-- 7-Day Forecast -->
-            <div id="forecast7DayData" class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div id="forecast5DayData" class="bg-white rounded-xl shadow-lg p-6 mb-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                    <span class="text-2xl"></span>                             <!--EMOIJI YERI -->
-                    7 Günlük Hava Durumu Tahmini
+                    <span class="text-2xl"></span>
+                    5 Günlük Hava Durumu Tahmini <!-- 7 Günlük yerine 5 Günlük -->
                 </h2>
-                
+
                 <!-- Weather Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -423,6 +476,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Bugün -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-4 px-4">
                                     <div class="font-semibold text-gray-800">Bugün</div>
@@ -441,7 +495,7 @@
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-violet-600">12 km/h</div>
-                                    <div class="text-sm text-gray-500">KB</div>
+
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-blue-600">0%</div>
@@ -451,6 +505,8 @@
                                     <div class="text-sm text-gray-500">İyi</div>
                                 </td>
                             </tr>
+
+                            <!-- Yarın -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-4 px-4">
                                     <div class="font-semibold text-gray-800">Yarın</div>
@@ -479,6 +535,8 @@
                                     <div class="text-sm text-gray-500">Orta</div>
                                 </td>
                             </tr>
+
+                            <!-- 3. Gün -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-4 px-4">
                                     <div class="font-semibold text-gray-800">Pazartesi</div>
@@ -497,7 +555,7 @@
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-violet-600">8 km/h</div>
-                                    <div class="text-sm text-gray-500">GD</div>
+
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-blue-600">75%</div>
@@ -507,6 +565,8 @@
                                     <div class="text-sm text-gray-500">Orta</div>
                                 </td>
                             </tr>
+
+                            <!-- 4. Gün -->
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-4 px-4">
                                     <div class="font-semibold text-gray-800">Salı</div>
@@ -525,7 +585,7 @@
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-violet-600">10 km/h</div>
-                                    <div class="text-sm text-gray-500">B</div>
+
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-blue-600">20%</div>
@@ -535,7 +595,9 @@
                                     <div class="text-sm text-gray-500">İyi</div>
                                 </td>
                             </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+
+                            <!-- 5. Gün -->
+                            <tr class="hover:bg-gray-50">
                                 <td class="py-4 px-4">
                                     <div class="font-semibold text-gray-800">Çarşamba</div>
                                     <div class="text-sm text-gray-500">19 Aralık</div>
@@ -553,7 +615,7 @@
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-violet-600">14 km/h</div>
-                                    <div class="text-sm text-gray-500">GB</div>
+
                                 </td>
                                 <td class="py-4 px-4 text-center">
                                     <div class="text-lg font-semibold text-blue-600">5%</div>
@@ -563,74 +625,19 @@
                                     <div class="text-sm text-gray-500">İyi</div>
                                 </td>
                             </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-4 px-4">
-                                    <div class="font-semibold text-gray-800">Perşembe</div>
-                                    <div class="text-sm text-gray-500">20 Aralık</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-3xl mb-1">☀️</div>
-                                    <div class="text-sm text-gray-600">Güneşli</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-xl font-bold text-yellow-600">28°C</div>
-                                    <div class="text-sm text-gray-500">Min: 21°C</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-cyan-600">48%</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-violet-600">16 km/h</div>
-                                    <div class="text-sm text-gray-500">G</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-blue-600">0%</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-green-600">28</div>
-                                    <div class="text-sm text-gray-500">İyi</div>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-4 px-4">
-                                    <div class="font-semibold text-gray-800">Cuma</div>
-                                    <div class="text-sm text-gray-500">21 Aralık</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-3xl mb-1">⛈️</div>
-                                    <div class="text-sm text-gray-600">Fırtınalı</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-xl font-bold text-purple-600">21°C</div>
-                                    <div class="text-sm text-gray-500">Min: 14°C</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-cyan-600">88%</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-violet-600">22 km/h</div>
-                                    <div class="text-sm text-gray-500">KB</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-blue-600">90%</div>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="text-lg font-semibold text-red-600">95</div>
-                                    <div class="text-sm text-gray-500">Orta</div>
-                                </td>
-                            </tr>
+                            <!-- Perşembe ve Cuma satırlarını sildik -->
                         </tbody>
                     </table>
                 </div>
             </div>
-
             <!-- 24-Hour Forecast -->
+
             <div id="forecast24HourData" class="bg-white rounded-xl shadow-lg p-6 hidden">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                     <span class="text-2xl"></span>
                     24 Saatlik Hava Durumu Tahmini
                 </h2>
-                
+
                 <!-- Hourly Weather Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -666,26 +673,6 @@
                                 <td class="py-3 px-3 text-center text-blue-600">0%</td>
                             </tr>
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-3">16:00</td>
-                                <td class="py-3 px-3 text-center">
-                                    <div class="text-2xl">🌤️</div>
-                                </td>
-                                <td class="py-3 px-3 text-center font-bold text-yellow-600">25°C</td>
-                                <td class="py-3 px-3 text-center text-cyan-600">62%</td>
-                                <td class="py-3 px-3 text-center text-violet-600">15 km/h</td>
-                                <td class="py-3 px-3 text-center text-blue-600">5%</td>
-                            </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-3">17:00</td>
-                                <td class="py-3 px-3 text-center">
-                                    <div class="text-2xl">☀️</div>
-                                </td>
-                                <td class="py-3 px-3 text-center font-bold text-yellow-600">26°C</td>
-                                <td class="py-3 px-3 text-center text-cyan-600">58%</td>
-                                <td class="py-3 px-3 text-center text-violet-600">16 km/h</td>
-                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
-                            </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-3 px-3">18:00</td>
                                 <td class="py-3 px-3 text-center">
                                     <div class="text-2xl">🌅</div>
@@ -693,26 +680,6 @@
                                 <td class="py-3 px-3 text-center font-bold text-orange-600">23°C</td>
                                 <td class="py-3 px-3 text-center text-cyan-600">64%</td>
                                 <td class="py-3 px-3 text-center text-violet-600">13 km/h</td>
-                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
-                            </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-3">19:00</td>
-                                <td class="py-3 px-3 text-center">
-                                    <div class="text-2xl">🌙</div>
-                                </td>
-                                <td class="py-3 px-3 text-center font-bold text-indigo-600">21°C</td>
-                                <td class="py-3 px-3 text-center text-cyan-600">68%</td>
-                                <td class="py-3 px-3 text-center text-violet-600">11 km/h</td>
-                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
-                            </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-3">20:00</td>
-                                <td class="py-3 px-3 text-center">
-                                    <div class="text-2xl">🌙</div>
-                                </td>
-                                <td class="py-3 px-3 text-center font-bold text-blue-600">19°C</td>
-                                <td class="py-3 px-3 text-center text-cyan-600">72%</td>
-                                <td class="py-3 px-3 text-center text-violet-600">10 km/h</td>
                                 <td class="py-3 px-3 text-center text-blue-600">0%</td>
                             </tr>
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
@@ -726,26 +693,6 @@
                                 <td class="py-3 px-3 text-center text-blue-600">0%</td>
                             </tr>
                             <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-3">22:00</td>
-                                <td class="py-3 px-3 text-center">
-                                    <div class="text-2xl">🌙</div>
-                                </td>
-                                <td class="py-3 px-3 text-center font-bold text-green-600">17°C</td>
-                                <td class="py-3 px-3 text-center text-cyan-600">78%</td>
-                                <td class="py-3 px-3 text-center text-violet-600">8 km/h</td>
-                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
-                            </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-3 px-3">23:00</td>
-                                <td class="py-3 px-3 text-center">
-                                    <div class="text-2xl">🌙</div>
-                                </td>
-                                <td class="py-3 px-3 text-center font-bold text-teal-600">16°C</td>
-                                <td class="py-3 px-3 text-center text-cyan-600">80%</td>
-                                <td class="py-3 px-3 text-center text-violet-600">7 km/h</td>
-                                <td class="py-3 px-3 text-center text-blue-600">5%</td>
-                            </tr>
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
                                 <td class="py-3 px-3">00:00</td>
                                 <td class="py-3 px-3 text-center">
                                     <div class="text-2xl">🌙</div>
@@ -755,15 +702,55 @@
                                 <td class="py-3 px-3 text-center text-violet-600">6 km/h</td>
                                 <td class="py-3 px-3 text-center text-blue-600">10%</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-3 px-3">01:00</td>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3">03:00</td>
                                 <td class="py-3 px-3 text-center">
                                     <div class="text-2xl">🌙</div>
                                 </td>
-                                <td class="py-3 px-3 text-center font-bold text-emerald-600">14°C</td>
+                                <td class="py-3 px-3 text-center font-bold text-indigo-600">13°C</td>
                                 <td class="py-3 px-3 text-center text-cyan-600">85%</td>
                                 <td class="py-3 px-3 text-center text-violet-600">5 km/h</td>
                                 <td class="py-3 px-3 text-center text-blue-600">15%</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3">06:00</td>
+                                <td class="py-3 px-3 text-center">
+                                    <div class="text-2xl">🌅</div>
+                                </td>
+                                <td class="py-3 px-3 text-center font-bold text-blue-600">14°C</td>
+                                <td class="py-3 px-3 text-center text-cyan-600">80%</td>
+                                <td class="py-3 px-3 text-center text-violet-600">7 km/h</td>
+                                <td class="py-3 px-3 text-center text-blue-600">5%</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3">09:00</td>
+                                <td class="py-3 px-3 text-center">
+                                    <div class="text-2xl">🌤️</div>
+                                </td>
+                                <td class="py-3 px-3 text-center font-bold text-green-600">18°C</td>
+                                <td class="py-3 px-3 text-center text-cyan-600">70%</td>
+                                <td class="py-3 px-3 text-center text-violet-600">10 km/h</td>
+                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                <td class="py-3 px-3">12:00</td>
+                                <td class="py-3 px-3 text-center">
+                                    <div class="text-2xl">☀️</div>
+                                </td>
+                                <td class="py-3 px-3 text-center font-bold text-yellow-600">21°C</td>
+                                <td class="py-3 px-3 text-center text-cyan-600">65%</td>
+                                <td class="py-3 px-3 text-center text-violet-600">12 km/h</td>
+                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-3">15:00</td>
+                                <td class="py-3 px-3 text-center">
+                                    <div class="text-2xl">☀️</div>
+                                </td>
+                                <td class="py-3 px-3 text-center font-bold text-orange-600">24°C</td>
+                                <td class="py-3 px-3 text-center text-cyan-600">62%</td>
+                                <td class="py-3 px-3 text-center text-violet-600">14 km/h</td>
+                                <td class="py-3 px-3 text-center text-blue-600">0%</td>
                             </tr>
                         </tbody>
                     </table>
@@ -776,27 +763,28 @@
             <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                 <div class="flex flex-col lg:flex-row gap-4 mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 flex-1">Hava Kalitesi Haritası</h2>
-                    
+
                     <!-- Data Layer Selection -->
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="changeMapLayer('pm25')" id="layerPM25" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
-                            PM2.5
+                        <button onclick="changeMapLayer('o2o2')" id="layerO2O2"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
+                            O₂O₂
                         </button>
-                        <button onclick="changeMapLayer('pm10')" id="layerPM10" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
-                            PM10
-                        </button>
-                        <button onclick="changeMapLayer('no2')" id="layerNO2" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
+                        <button onclick="changeMapLayer('no2')" id="layerNO2"
+                            class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
                             NO₂
                         </button>
-                        <button onclick="changeMapLayer('o3')" id="layerO3" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
+                        <button onclick="changeMapLayer('o3')" id="layerO3"
+                            class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
                             O₃
                         </button>
-                        <button onclick="changeMapLayer('co')" id="layerCO" class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
-                            CO
+                        <button onclick="changeMapLayer('hcho')" id="layerHCHO"
+                            class="px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium">
+                            HCHO
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Legend -->
                 <div class="mb-4 p-3 bg-gray-50 rounded-lg">
                     <div class="flex items-center gap-4 text-sm">
@@ -819,24 +807,25 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="map" class="w-full h-96 rounded-lg border"></div>
             </div>
         </div>
-
         <!-- Alerts Section -->
         <div id="alertsSection" class="section hidden">
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-2xl font-bold text-gray-800">Bildirimler</h2>
-                    <button onclick="markAllAsRead()" id="markAllReadBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
+                    <button onclick="markAllAsRead()" id="markAllReadBtn"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
                         </svg>
                         Hepsini Oku
                     </button>
                 </div>
-                
+
                 <div id="alertsList" class="space-y-4">
                     <!-- Notifications will be populated here -->
                 </div>
@@ -847,16 +836,19 @@
         <div id="settingsSection" class="section hidden">
             <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Ayarlar</h2>
-                
+
                 <div class="space-y-6">
                     <!-- Activity Preferences -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivite Tercihleri</h3>
-                        <p class="text-sm text-gray-600 mb-4">Hangi aktivitelerin Live sekmesinde gösterilmesini istiyorsunuz?</p>
-                        
+                        <p class="text-sm text-gray-600 mb-4">Hangi aktivitelerin Live sekmesinde gösterilmesini
+                            istiyorsunuz?</p>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-running" checked class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-running" checked class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🏃‍♂️</span>
@@ -864,9 +856,11 @@
                                     <span class="text-gray-700 font-medium">Koşu</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-cycling" checked class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-cycling" checked class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🚴‍♂️</span>
@@ -874,9 +868,11 @@
                                     <span class="text-gray-700 font-medium">Bisiklet</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-walking" class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-walking" class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🚶‍♂️</span>
@@ -884,9 +880,11 @@
                                     <span class="text-gray-700 font-medium">Yürüyüş</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-sports" class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-sports" class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">⚽</span>
@@ -894,9 +892,11 @@
                                     <span class="text-gray-700 font-medium">Açık Hava Sporu</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-swimming" class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-swimming" class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🏊‍♂️</span>
@@ -904,9 +904,11 @@
                                     <span class="text-gray-700 font-medium">Yüzme</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-hiking" class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-hiking" class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🥾</span>
@@ -914,9 +916,11 @@
                                     <span class="text-gray-700 font-medium">Doğa Yürüyüşü</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-tennis" class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-tennis" class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🎾</span>
@@ -924,9 +928,11 @@
                                     <span class="text-gray-700 font-medium">Tenis</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="activity-golf" class="mr-3 text-blue-600" onchange="updateActivityPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="activity-golf" class="mr-3 text-blue-600"
+                                    onchange="updateActivityPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">⛳</span>
@@ -935,22 +941,24 @@
                                 </div>
                             </label>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
-            
+
             <!-- Health Settings -->
             <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Sağlık Ayarları</h2>
-                
+
                 <div class="space-y-6">
                     <!-- Age Selection -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Yaş Grubu</h3>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="age-group" value="child" class="mr-3 text-blue-600" onchange="updateHealthPreferences()">
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="age-group" value="child" class="mr-3 text-blue-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">👶</span>
@@ -958,9 +966,11 @@
                                     <span class="text-gray-700 font-medium">Çocuk (0-17 yaş)</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="age-group" value="adult" checked class="mr-3 text-blue-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="age-group" value="adult" checked class="mr-3 text-blue-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🧑</span>
@@ -968,9 +978,11 @@
                                     <span class="text-gray-700 font-medium">Yetişkin (18-64 yaş)</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="radio" name="age-group" value="elderly" class="mr-3 text-blue-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="radio" name="age-group" value="elderly" class="mr-3 text-blue-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">👴</span>
@@ -980,13 +992,15 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Pregnancy Status -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">Hamilelik Durumu</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="pregnancy-status" class="mr-3 text-pink-600" onchange="updateHealthPreferences()">
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="pregnancy-status" class="mr-3 text-pink-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🤰</span>
@@ -994,9 +1008,11 @@
                                     <span class="text-gray-700 font-medium">Hamile</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="breastfeeding-status" class="mr-3 text-pink-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="breastfeeding-status" class="mr-3 text-pink-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🤱</span>
@@ -1006,7 +1022,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Respiratory System Diseases -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
@@ -1014,10 +1030,12 @@
                             Solunum Sistemi Hastalıkları
                         </h3>
                         <p class="text-sm text-gray-600 mb-4">Sahip olduğunuz solunum sistemi hastalıklarını seçin:</p>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-asthma" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-asthma" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🫁</span>
@@ -1025,9 +1043,11 @@
                                     <span class="text-gray-700 font-medium">Astım</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-copd" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-copd" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">💨</span>
@@ -1035,9 +1055,11 @@
                                     <span class="text-gray-700 font-medium">KOAH / Solunum Problemleri</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-bronchitis" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-bronchitis" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🦠</span>
@@ -1045,9 +1067,11 @@
                                     <span class="text-gray-700 font-medium">Kronik Bronşit</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-sinusitis" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-sinusitis" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">😤</span>
@@ -1055,9 +1079,11 @@
                                     <span class="text-gray-700 font-medium">Sinüzit</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-allergies" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-allergies" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🤧</span>
@@ -1067,7 +1093,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Cardiovascular and Metabolic Diseases -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
@@ -1075,10 +1101,12 @@
                             Kardiyovasküler ve Metabolik Hastalıklar
                         </h3>
                         <p class="text-sm text-gray-600 mb-4">Sahip olduğunuz kalp ve metabolik hastalıkları seçin:</p>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-heart-disease" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-heart-disease" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">💔</span>
@@ -1086,9 +1114,11 @@
                                     <span class="text-gray-700 font-medium">Kalp Hastalığı</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-hypertension" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-hypertension" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">📈</span>
@@ -1096,13 +1126,15 @@
                                     <span class="text-gray-700 font-medium">Hipertansiyon</span>
                                 </div>
                             </label>
-                            
-                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" id="health-diabetes" class="mr-3 text-red-600" onchange="updateHealthPreferences()">
+
+                            <label
+                                class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                <input type="checkbox" id="health-diabetes" class="mr-3 text-red-600"
+                                    onchange="updateHealthPreferences()">
                                 <div class="flex items-center gap-3">
                                     <div class="">
                                         <span class="text-xl">🩸</span>
-                    </div>
+                                    </div>
                                     <span class="text-gray-700 font-medium">Diyabet</span>
                                 </div>
                             </label>
@@ -1125,14 +1157,14 @@
         let map;
         let currentChart;
         let currentMapLayer = 'pm25';
-        
+
         // North American countries, states/provinces, and cities for search suggestions
         const northAmericanCountries = [
             { name: 'ABD', type: 'country', lat: 39.8283, lng: -98.5795 },
             { name: 'Kanada', type: 'country', lat: 56.1304, lng: -106.3468 },
             { name: 'Meksika', type: 'country', lat: 23.6345, lng: -102.5528 }
         ];
-        
+
         const northAmericanStates = [
             // US States
             { name: 'Alabama', country: 'ABD', type: 'state', lat: 32.3617, lng: -86.2792 },
@@ -1185,7 +1217,7 @@
             { name: 'West Virginia', country: 'ABD', type: 'state', lat: 38.3498, lng: -80.6547 },
             { name: 'Wisconsin', country: 'ABD', type: 'state', lat: 43.7844, lng: -88.7879 },
             { name: 'Wyoming', country: 'ABD', type: 'state', lat: 43.0759, lng: -107.2903 },
-            
+
             // Canadian Provinces and Territories
             { name: 'Alberta', country: 'Kanada', type: 'province', lat: 53.9333, lng: -116.5765 },
             { name: 'British Columbia', country: 'Kanada', type: 'province', lat: 53.7267, lng: -127.6476 },
@@ -1200,7 +1232,7 @@
             { name: 'Quebec', country: 'Kanada', type: 'province', lat: 52.9399, lng: -73.5491 },
             { name: 'Saskatchewan', country: 'Kanada', type: 'province', lat: 52.9399, lng: -106.4509 },
             { name: 'Yukon', country: 'Kanada', type: 'territory', lat: 64.2823, lng: -135.0000 },
-            
+
             // Mexican States
             { name: 'Aguascalientes', country: 'Meksika', type: 'state', lat: 21.8853, lng: -102.2916 },
             { name: 'Baja California', country: 'Meksika', type: 'state', lat: 30.8406, lng: -115.2838 },
@@ -1234,84 +1266,56 @@
             { name: 'Yucatán', country: 'Meksika', type: 'state', lat: 20.7099, lng: -89.0943 },
             { name: 'Zacatecas', country: 'Meksika', type: 'state', lat: 22.7709, lng: -102.5832 }
         ];
-        
+
         const northAmericanCities = [
-            { name: 'New York City', country: 'ABD', state: 'New York', lat: 40.7128, lng: -74.0060 },
-            { name: 'Los Angeles', country: 'ABD', state: 'California', lat: 34.0522, lng: -118.2437 },
-            { name: 'Chicago', country: 'ABD', state: 'Illinois', lat: 41.8781, lng: -87.6298 },
-            { name: 'Houston', country: 'ABD', state: 'Texas', lat: 29.7604, lng: -95.3698 },
-            { name: 'Phoenix', country: 'ABD', state: 'Arizona', lat: 33.4484, lng: -112.0740 },
-            { name: 'Philadelphia', country: 'ABD', state: 'Pennsylvania', lat: 39.9526, lng: -75.1652 },
-            { name: 'San Antonio', country: 'ABD', state: 'Texas', lat: 29.4241, lng: -98.4936 },
-            { name: 'San Diego', country: 'ABD', state: 'California', lat: 32.7157, lng: -117.1611 },
-            { name: 'Dallas', country: 'ABD', state: 'Texas', lat: 32.7767, lng: -96.7970 },
-            { name: 'San Jose', country: 'ABD', state: 'California', lat: 37.3382, lng: -121.8863 },
-            { name: 'Austin', country: 'ABD', state: 'Texas', lat: 30.2672, lng: -97.7431 },
-            { name: 'Jacksonville', country: 'ABD', state: 'Florida', lat: 30.3322, lng: -81.6557 },
-            { name: 'San Francisco', country: 'ABD', state: 'California', lat: 37.7749, lng: -122.4194 },
-            { name: 'Columbus', country: 'ABD', state: 'Ohio', lat: 39.9612, lng: -82.9988 },
-            { name: 'Fort Worth', country: 'ABD', state: 'Texas', lat: 32.7555, lng: -97.3308 },
-            { name: 'Indianapolis', country: 'ABD', state: 'Indiana', lat: 39.7684, lng: -86.1581 },
-            { name: 'Charlotte', country: 'ABD', state: 'North Carolina', lat: 35.2271, lng: -80.8431 },
-            { name: 'Seattle', country: 'ABD', state: 'Washington', lat: 47.6062, lng: -122.3321 },
-            { name: 'Denver', country: 'ABD', state: 'Colorado', lat: 39.7392, lng: -104.9903 },
-            { name: 'Boston', country: 'ABD', state: 'Massachusetts', lat: 42.3601, lng: -71.0589 },
-            { name: 'El Paso', country: 'ABD', state: 'Texas', lat: 31.7619, lng: -106.4850 },
-            { name: 'Detroit', country: 'ABD', state: 'Michigan', lat: 42.3314, lng: -83.0458 },
-            { name: 'Nashville', country: 'ABD', state: 'Tennessee', lat: 36.1627, lng: -86.7816 },
-            { name: 'Portland', country: 'ABD', state: 'Oregon', lat: 45.5152, lng: -122.6784 },
-            { name: 'Oklahoma City', country: 'ABD', state: 'Oklahoma', lat: 35.4676, lng: -97.5164 },
-            { name: 'Las Vegas', country: 'ABD', state: 'Nevada', lat: 36.1699, lng: -115.1398 },
-            { name: 'Louisville', country: 'ABD', state: 'Kentucky', lat: 38.2527, lng: -85.7585 },
-            { name: 'Baltimore', country: 'ABD', state: 'Maryland', lat: 39.2904, lng: -76.6122 },
-            { name: 'Milwaukee', country: 'ABD', state: 'Wisconsin', lat: 43.0389, lng: -87.9065 },
-            { name: 'Albuquerque', country: 'ABD', state: 'New Mexico', lat: 35.0844, lng: -106.6504 },
-            { name: 'Tucson', country: 'ABD', state: 'Arizona', lat: 32.2226, lng: -110.9747 },
-            { name: 'Fresno', country: 'ABD', state: 'California', lat: 36.7378, lng: -119.7871 },
-            { name: 'Sacramento', country: 'ABD', state: 'California', lat: 38.5816, lng: -121.4944 },
-            { name: 'Kansas City', country: 'ABD', state: 'Missouri', lat: 39.0997, lng: -94.5786 },
-            { name: 'Mesa', country: 'ABD', state: 'Arizona', lat: 33.4152, lng: -111.8315 },
-            { name: 'Atlanta', country: 'ABD', state: 'Georgia', lat: 33.7490, lng: -84.3880 },
-            { name: 'Colorado Springs', country: 'ABD', state: 'Colorado', lat: 38.8339, lng: -104.8214 },
-            { name: 'Raleigh', country: 'ABD', state: 'North Carolina', lat: 35.7796, lng: -78.6382 },
-            { name: 'Omaha', country: 'ABD', state: 'Nebraska', lat: 41.2565, lng: -95.9345 },
-            { name: 'Miami', country: 'ABD', state: 'Florida', lat: 25.7617, lng: -80.1918 },
-            { name: 'Oakland', country: 'ABD', state: 'California', lat: 37.8044, lng: -122.2712 },
-            { name: 'Minneapolis', country: 'ABD', state: 'Minnesota', lat: 44.9778, lng: -93.2650 },
-            { name: 'Tulsa', country: 'ABD', state: 'Oklahoma', lat: 36.1540, lng: -95.9928 },
-            { name: 'Cleveland', country: 'ABD', state: 'Ohio', lat: 41.4993, lng: -81.6944 },
-            { name: 'Wichita', country: 'ABD', state: 'Kansas', lat: 37.6872, lng: -97.3301 },
-            { name: 'Arlington', country: 'ABD', state: 'Texas', lat: 32.7357, lng: -97.1081 },
-            
-            // Canadian Cities
-            { name: 'Toronto', country: 'Kanada', province: 'Ontario', lat: 43.6532, lng: -79.3832 },
-            { name: 'Montreal', country: 'Kanada', province: 'Quebec', lat: 45.5017, lng: -73.5673 },
-            { name: 'Vancouver', country: 'Kanada', province: 'British Columbia', lat: 49.2827, lng: -123.1207 },
-            { name: 'Calgary', country: 'Kanada', province: 'Alberta', lat: 51.0447, lng: -114.0719 },
-            { name: 'Edmonton', country: 'Kanada', province: 'Alberta', lat: 53.5461, lng: -113.4938 },
-            { name: 'Ottawa', country: 'Kanada', province: 'Ontario', lat: 45.4215, lng: -75.6972 },
-            { name: 'Winnipeg', country: 'Kanada', province: 'Manitoba', lat: 49.8951, lng: -97.1384 },
-            { name: 'Quebec City', country: 'Kanada', province: 'Quebec', lat: 46.8139, lng: -71.2080 },
-            { name: 'Hamilton', country: 'Kanada', province: 'Ontario', lat: 43.2557, lng: -79.8711 },
-            { name: 'Kitchener', country: 'Kanada', province: 'Ontario', lat: 43.4516, lng: -80.4925 },
-            { name: 'London', country: 'Kanada', province: 'Ontario', lat: 42.9849, lng: -81.2453 },
-            { name: 'Halifax', country: 'Kanada', province: 'Nova Scotia', lat: 44.6488, lng: -63.5752 },
-            { name: 'Victoria', country: 'Kanada', province: 'British Columbia', lat: 48.4284, lng: -123.3656 },
-            
-            // Mexican Cities
-            { name: 'Mexico City', country: 'Meksika', state: 'México', lat: 19.4326, lng: -99.1332 },
-            { name: 'Guadalajara', country: 'Meksika', state: 'Jalisco', lat: 20.6597, lng: -103.3496 },
-            { name: 'Monterrey', country: 'Meksika', state: 'Nuevo León', lat: 25.6866, lng: -100.3161 },
-            { name: 'Puebla', country: 'Meksika', state: 'Puebla', lat: 19.0414, lng: -98.2063 },
-            { name: 'Tijuana', country: 'Meksika', state: 'Baja California', lat: 32.5149, lng: -117.0382 },
-            { name: 'León', country: 'Meksika', state: 'Guanajuato', lat: 21.1619, lng: -101.6921 },
-            { name: 'Juárez', country: 'Meksika', state: 'Chihuahua', lat: 31.6904, lng: -106.4245 },
-            { name: 'Zapopan', country: 'Meksika', state: 'Jalisco', lat: 20.7214, lng: -103.3918 },
-            { name: 'Nezahualcóyotl', country: 'Meksika', state: 'México', lat: 19.4003, lng: -99.0147 },
-            { name: 'Chihuahua', country: 'Meksika', state: 'Chihuahua', lat: 28.6353, lng: -106.0889 },
-            { name: 'Naucalpan', country: 'Meksika', state: 'México', lat: 19.4779, lng: -99.2386 }
+
         ];
-        
+
+
+        // Hissedilen sıcaklık hesaplama fonksiyonu
+        function calculateFeelsLike(temp, humidity, wind) {
+            // Basit hissedilen sıcaklık hesaplaması
+            // Sıcak hava için: Yüksek nem sıcaklık hissini artırır
+            let feelsLike = temp;
+
+            if (temp >= 20) {
+                // Sıcak hava: nem etkisi
+                if (humidity > 70) feelsLike += 3;
+                else if (humidity > 50) feelsLike += 2;
+                else if (humidity > 30) feelsLike += 1;
+            } else {
+                // Soğuk hava: rüzgar etkisi
+                if (wind > 20) feelsLike -= 4;
+                else if (wind > 15) feelsLike -= 3;
+                else if (wind > 10) feelsLike -= 2;
+                else if (wind > 5) feelsLike -= 1;
+            }
+
+            return Math.round(feelsLike);
+        }
+
+        // Hissedilen sıcaklık trendi fonksiyonu
+        function getFeelsLikeTrend(temp, feelsLike) {
+            if (feelsLike > temp) {
+                return {
+                    icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path></svg>',
+                    color: 'text-red-600',
+                    text: 'Daha sıcak'
+                };
+            } else if (feelsLike < temp) {
+                return {
+                    icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7l-9.2 9.2M7 7v10h10"></path></svg>',
+                    color: 'text-blue-600',
+                    text: 'Daha serin'
+                };
+            } else {
+                return {
+                    icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>',
+                    color: 'text-gray-600',
+                    text: 'Aynı'
+                };
+            }
+        }
         // Activity management
         const availableActivities = {
             running: {
@@ -1395,10 +1399,89 @@
                 dotColor: 'bg-yellow-500'
             }
         };
-        
+
         let selectedActivities = ['running', 'cycling']; // Default activities
         let currentActivityIndex = 0;
-        
+        // Activity management functions
+        function updateActivityPreferences() {
+            selectedActivities = [];
+
+            // Get all checked activity checkboxes
+            const activityCheckboxes = [
+                'activity-running', 'activity-cycling', 'activity-walking',
+                'activity-sports', 'activity-swimming', 'activity-hiking',
+                'activity-tennis', 'activity-golf'
+            ];
+
+            activityCheckboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox && checkbox.checked) {
+                    selectedActivities.push(id.replace('activity-', ''));
+                }
+            });
+
+            // If no activities selected, set default
+            if (selectedActivities.length === 0) {
+                selectedActivities = ['running', 'cycling'];
+                // Also check the default checkboxes
+                document.getElementById('activity-running').checked = true;
+                document.getElementById('activity-cycling').checked = true;
+            }
+
+            // Update activity display
+            updateActivityDisplay();
+            showNotification('Aktivite tercihleri güncellendi', 'success');
+        }
+
+        function updateHealthPreferences() {
+            // Update age group
+            const ageGroupRadios = document.getElementsByName('age-group');
+            for (let radio of ageGroupRadios) {
+                if (radio.checked) {
+                    healthPreferences.ageGroup = radio.value;
+                    break;
+                }
+            }
+
+            // Update pregnancy status
+            healthPreferences.isPregnant = document.getElementById('pregnancy-status').checked;
+            healthPreferences.isBreastfeeding = document.getElementById('breastfeeding-status').checked;
+
+            // Update health conditions
+            healthPreferences.conditions = [];
+            const healthConditions = [
+                'health-asthma', 'health-copd', 'health-bronchitis',
+                'health-sinusitis', 'health-allergies', 'health-heart-disease',
+                'health-hypertension', 'health-diabetes'
+            ];
+
+            healthConditions.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox && checkbox.checked) {
+                    healthPreferences.conditions.push(id.replace('health-', ''));
+                }
+            });
+
+            // Generate new health-based notifications
+            const healthNotifications = generateHealthBasedNotifications();
+            smartNotifications = [...smartNotifications, ...healthNotifications];
+            displaySmartNotifications(smartNotifications);
+
+            showNotification('Sağlık ayarları güncellendi', 'success');
+        }
+
+        // Activity navigation functions
+        function nextActivity() {
+            const totalItems = selectedActivities.length + 1; // +1 for settings card
+            currentActivityIndex = (currentActivityIndex + 1) % totalItems;
+            updateActivitySlider();
+        }
+
+        function previousActivity() {
+            const totalItems = selectedActivities.length + 1; // +1 for settings card
+            currentActivityIndex = (currentActivityIndex - 1 + totalItems) % totalItems;
+            updateActivitySlider();
+        }
         function getWindTrend() {
             const trends = [
                 { icon: '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path></svg>', color: 'text-green-600' },
@@ -1407,16 +1490,8 @@
             ];
             return trends[Math.floor(Math.random() * trends.length)];
         }
-        
-        function getPollenTrend() {
-            const trends = [
-                { icon: '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path></svg>', color: 'text-orange-600' },
-                { icon: '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7l-9.2 9.2M7 7v10h10"></path></svg>', color: 'text-green-600' },
-                { icon: '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>', color: 'text-gray-600' }
-            ];
-            return trends[Math.floor(Math.random() * trends.length)];
-        }
-        
+
+
         function getActivityStatus(activityId, aqi) {
             // Generate activity status based on AQI and activity type
             if (aqi <= 50) {
@@ -1453,215 +1528,174 @@
                 return { status: 'Önerilmez', description: warnings[activityId] || 'Aktivite önerilmez' };
             }
         }
-        
+
         function updateActivityDisplay() {
             const container = document.getElementById('activityContainer');
             if (!container) return;
-            
+
             const currentAQI = parseInt(document.getElementById('aqiValue').textContent) || 42;
             const currentWind = parseInt(document.getElementById('windValue').textContent) || 12;
-            const currentPollen = document.getElementById('pollenValue').textContent || 'Orta';
-            
-            // Clear container
+            const currentFeelsLike = parseInt(document.getElementById('feelsLikeTemp').textContent) || 24;
+            const currentTemp = parseInt(document.querySelector('.text-3xl.font-bold.text-blue-600').textContent) || 22;
+
+            // Container'ı tamamen temizle
             container.innerHTML = '';
-            
+
+            // Container genişliğini ve transform'u sıfırla
+            container.style.width = '';
+            container.style.transform = 'translateX(0px)';
+
+            const parentContainer = container.parentElement;
+            const containerWidth = parentContainer.offsetWidth;
+            const totalItems = selectedActivities.length + 1; // +1 for settings card
+
+            // Container genişliğini doğru şekilde ayarla - DEĞİŞTİRİLDİ
+            container.style.width = `${totalItems * 100}%`;
+
             // Add selected activities
             selectedActivities.forEach(activityId => {
                 const activity = availableActivities[activityId];
                 if (!activity) return;
-                
+
                 const status = getActivityStatus(activityId, currentAQI);
                 const windTrend = getWindTrend();
-                const pollenTrend = getPollenTrend();
-                
+                const feelsLikeTrend = getFeelsLikeTrend(currentTemp, currentFeelsLike);
+
                 const activityCard = document.createElement('div');
-                activityCard.className = `flex-shrink-0 w-full h-full p-4 ${activity.bgColor} rounded-lg border ${activity.borderColor} flex flex-col justify-between`;
-                
+                activityCard.className = `flex-shrink-0 h-full p-4 ${activity.bgColor} rounded-lg border ${activity.borderColor} flex flex-col justify-between`;
+                activityCard.style.width = `${100 / totalItems}%`; // DEĞİŞTİRİLDİ
+
                 activityCard.innerHTML = `
-                    <div class="flex items-center gap-4 mb-3">
-                        <div class="w-16 h-16 ${activity.iconBg} rounded-full flex items-center justify-center">
-                            <span class="text-3xl">${activity.icon}</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-xl font-semibold text-gray-800 mb-1">${activity.name}</h4>
-                            <p class="text-sm text-gray-600 mb-2">${status.description}</p>
-                            <div class="flex items-center gap-3">
-                                <div class="w-4 h-4 ${activity.dotColor} rounded-full"></div>
-                                <span class="text-lg font-semibold ${activity.statusColor}">${status.status}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600">Rüzgar</span>
-                            <div class="flex items-center gap-1 ${windTrend.color}">
-                                ${windTrend.icon}
-                                <span class="font-medium">${currentWind} km/h</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600">Polen</span>
-                            <div class="flex items-center gap-1 ${pollenTrend.color}">
-                                ${pollenTrend.icon}
-                                <span class="font-medium">${currentPollen}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(activityCard);
-            });
-            
-            // Add settings card at the end
-            const settingsCard = document.createElement('div');
-            settingsCard.className = 'flex-shrink-0 w-full h-full p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col justify-center';
-            settingsCard.innerHTML = `
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                        <span class="text-3xl">⚙️</span>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-xl font-semibold text-gray-800 mb-2">Aktivite Ayarla</h4>
+            <div class="flex items-center gap-4 mb-3">
+                <div class="w-16 h-16 ${activity.iconBg} rounded-full flex items-center justify-center">
+                    <span class="text-3xl">${activity.icon}</span>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-1">${activity.name}</h4>
+                    <p class="text-sm text-gray-600 mb-2">${status.description}</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 ${activity.dotColor} rounded-full"></div>
+                        <span class="text-lg font-semibold ${activity.statusColor}">${status.status}</span>
                     </div>
                 </div>
-                <p class="text-base text-gray-700 text-center mb-4">Hangi aktiviteleri takip etmek istiyorsunuz?</p>
-                <button onclick="showSection('settings')" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
-                    Ayarları Düzenle
-                </button>
-            `;
+            </div>
             
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">Rüzgar</span>
+                    <div class="flex items-center gap-1 ${windTrend.color}">
+                        ${windTrend.icon}
+                        <span class="font-medium">${currentWind} km/h</span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">Hissedilen</span>
+                    <div class="flex items-center gap-1 ${feelsLikeTrend.color}">
+                        ${feelsLikeTrend.icon}
+                        <span class="font-medium">${currentFeelsLike}°C</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+                container.appendChild(activityCard);
+            });
+
+            // Add settings card at the end
+            const settingsCard = document.createElement('div');
+            settingsCard.className = 'flex-shrink-0 h-full p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col justify-center';
+            settingsCard.style.width = `${100 / totalItems}%`; // DEĞİŞTİRİLDİ
+
+            settingsCard.innerHTML = `
+        <div class="flex items-center gap-4 mb-4">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                <span class="text-3xl">⚙️</span>
+            </div>
+            <div class="flex-1">
+                <h4 class="text-xl font-semibold text-gray-800 mb-2">Aktivite Ayarla</h4>
+            </div>
+        </div>
+        <p class="text-base text-gray-700 text-center mb-4">Hangi aktiviteleri takip etmek istiyorsunuz?</p>
+        <button onclick="showSection('settings')" class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
+            Ayarları Düzenle
+        </button>
+    `;
+
             container.appendChild(settingsCard);
-            
-            // Update container width and initialize slider
-            const containerWidth = container.parentElement.offsetWidth;
-            const totalItems = selectedActivities.length + 1;
-            container.style.width = `${totalItems * containerWidth}px`;
-            
-            // Set each card width to match container
-            const cards = container.children;
-            for (let card of cards) {
-                card.style.width = `${containerWidth}px`;
-            }
-            
-            // Update dots and slider position
-            updateActivityDots();
-            updateActivitySlider();
-        }
-        
-        function updateActivityPreferences() {
-            // Get selected activities from checkboxes
-            selectedActivities = [];
-            
-            Object.keys(availableActivities).forEach(activityId => {
-                const checkbox = document.getElementById(`activity-${activityId}`);
-                if (checkbox && checkbox.checked) {
-                    selectedActivities.push(activityId);
-                }
-            });
-            
-            // Reset current index
+
+            // Reset current index and update slider
             currentActivityIndex = 0;
-            
-            // Update the display
-            updateActivityDisplay();
-            
-            // Show notification
-            showNotification('Aktivite tercihleri güncellendi', 'success');
-        }
-        
-        function updateHealthPreferences() {
-            // Get age group
-            const ageRadios = document.querySelectorAll('input[name="age-group"]');
-            ageRadios.forEach(radio => {
-                if (radio.checked) {
-                    healthPreferences.ageGroup = radio.value;
-                }
-            });
-            
-            // Get pregnancy status
-            healthPreferences.isPregnant = document.getElementById('pregnancy-status').checked;
-            healthPreferences.isBreastfeeding = document.getElementById('breastfeeding-status').checked;
-            
-            // Get health conditions
-            healthPreferences.conditions = [];
-            const conditionIds = [
-                'health-asthma', 'health-copd', 'health-bronchitis', 'health-sinusitis', 
-                'health-allergies', 'health-heart-disease', 'health-hypertension', 'health-diabetes'
-            ];
-            
-            conditionIds.forEach(id => {
-                const checkbox = document.getElementById(id);
-                if (checkbox && checkbox.checked) {
-                    healthPreferences.conditions.push(id.replace('health-', ''));
-                }
-            });
-            
-            // Generate new health-based notifications immediately
-            const healthNotifications = generateHealthBasedNotifications();
-            smartNotifications = [...smartNotifications, ...healthNotifications];
-            displaySmartNotifications(smartNotifications);
-            
-            // Show notification
-            showNotification('Sağlık ayarları güncellendi ve bildirimler oluşturuldu', 'success');
-        }
-        
-        function nextActivity() {
-            const totalItems = selectedActivities.length + 1; // +1 for settings card
-            currentActivityIndex = (currentActivityIndex + 1) % totalItems;
             updateActivitySlider();
+            updateActivityDots();
         }
-        
-        function previousActivity() {
-            const totalItems = selectedActivities.length + 1; // +1 for settings card
-            currentActivityIndex = (currentActivityIndex - 1 + totalItems) % totalItems;
-            updateActivitySlider();
-        }
-        
-        function goToActivity(index) {
-            currentActivityIndex = index;
-            updateActivitySlider();
-        }
-        
+
         function updateActivitySlider() {
             const container = document.getElementById('activityContainer');
             const containerWidth = container.parentElement.offsetWidth;
-            const translateX = -currentActivityIndex * containerWidth;
-            
-            container.style.transform = `translateX(${translateX}px)`;
-            
-            // Update dots
+            const translateX = -currentActivityIndex * (100 / (selectedActivities.length + 1)); // DEĞİŞTİ: Yüzde bazlı kaydırma
+
+            container.style.transform = `translateX(${translateX}%)`; // DEĞİŞTİ: Yüzde bazlı transform
             updateActivityDots();
         }
-        
         function updateActivityDots() {
             const dotsContainer = document.getElementById('activityDots');
             const totalItems = selectedActivities.length + 1; // +1 for settings card
-            
+
             dotsContainer.innerHTML = '';
-            
+
             for (let i = 0; i < totalItems; i++) {
                 const dot = document.createElement('button');
-                dot.className = `w-2 h-2 rounded-full transition-colors ${
-                    i === currentActivityIndex ? 'bg-blue-600' : 'bg-gray-300'
-                }`;
+                dot.className = `w-2 h-2 rounded-full transition-colors ${i === currentActivityIndex ? 'bg-blue-600' : 'bg-gray-300'}`;
                 dot.onclick = () => goToActivity(i);
                 dotsContainer.appendChild(dot);
             }
         }
-        
+
+        function goToActivity(index) {
+            currentActivityIndex = index;
+            updateActivitySlider();
+        }
+        function updateActivitySlider() {
+            const container = document.getElementById('activityContainer');
+            const totalItems = selectedActivities.length + 1;
+            const translateX = -currentActivityIndex * (100 / totalItems); // DEĞİŞTİRİLDİ
+
+            container.style.transform = `translateX(${translateX}%)`; // DEĞİŞTİRİLDİ
+            updateActivityDots();
+        }
+
+        function updateActivityDots() {
+            const dotsContainer = document.getElementById('activityDots');
+            const totalItems = selectedActivities.length + 1; // +1 for settings card
+
+            dotsContainer.innerHTML = '';
+
+            for (let i = 0; i < totalItems; i++) {
+                const dot = document.createElement('button');
+                dot.className = `w-2 h-2 rounded-full transition-colors ${i === currentActivityIndex ? 'bg-blue-600' : 'bg-gray-300'
+                    }`;
+                dot.onclick = () => goToActivity(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+
         // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initializeMap();
             startDataUpdates();
             updateActivityDisplay(); // Initialize activity display
             updateWindAndPollenTrends(); // Initialize trends
-            
+            // ========== BURAYA EKLE ==========
+            // Initialize activity preferences from checkboxes
+            updateActivityPreferences();
+
+            // Initialize health preferences
+            updateHealthPreferences();
             // Generate initial smart notifications
             const initialNotifications = generateSmartNotifications(currentLocationData, 'ABD', currentLocationData.temp, currentLocationData.aqi);
             smartNotifications = [...smartNotifications, ...initialNotifications];
             displaySmartNotifications(smartNotifications);
-            
+
             // Add initial current location marker
             if (currentLocationData) {
                 setTimeout(() => {
@@ -1669,84 +1703,62 @@
                 }, 1000);
             }
         });
-        
-        // Search suggestions
+
         function showSearchSuggestions(query) {
             const dropdown = document.getElementById('searchSuggestions');
-            
+
             if (!query || query.length < 1) {
                 dropdown.classList.add('hidden');
                 return;
             }
-            
-            // Search countries
-            const filteredCountries = northAmericanCountries.filter(country => 
+
+            // Sadece ülkeleri ve eyaletleri göster, şehirleri kaldır
+            const filteredCountries = northAmericanCountries.filter(country =>
                 country.name.toLowerCase().includes(query.toLowerCase())
             );
-            
-            // Search states/provinces
-            const filteredStates = northAmericanStates.filter(state => 
+
+            const filteredStates = northAmericanStates.filter(state =>
                 state.name.toLowerCase().includes(query.toLowerCase()) ||
                 state.country.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 4);
-            
-            // Search cities
-            const filteredCities = northAmericanCities.filter(city => 
-                city.name.toLowerCase().includes(query.toLowerCase()) ||
-                city.country.toLowerCase().includes(query.toLowerCase()) ||
-                (city.state && city.state.toLowerCase().includes(query.toLowerCase())) ||
-                (city.province && city.province.toLowerCase().includes(query.toLowerCase()))
-            ).slice(0, 5);
-            
-            const allResults = [...filteredCountries, ...filteredStates, ...filteredCities];
-            
+            ).slice(0, 6); // Daha fazla eyalet göster
+
+            // Şehir aramasını tamamen kaldırın
+            const allResults = [...filteredCountries, ...filteredStates];
+
             if (allResults.length === 0) {
                 dropdown.classList.add('hidden');
                 return;
             }
-            
+
             dropdown.innerHTML = allResults.map(item => {
                 if (item.type === 'country') {
                     return `
-                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors" 
-                             onmousedown="selectLocation('${item.name}', 'country', ${item.lat}, ${item.lng}, '${item.name}', '')">
-                            <div class="font-medium text-gray-800">${item.name}</div>
-                            <div class="text-sm text-blue-600 font-medium">Ülke</div>
-                        </div>
-                    `;
-                } else if (item.type === 'state' || item.type === 'province' || item.type === 'territory') {
+                <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors" 
+                     onmousedown="selectLocation('${item.name}', 'country', ${item.lat}, ${item.lng}, '${item.name}', '')">
+                    <div class="font-medium text-gray-800">${item.name}</div>
+                    <div class="text-sm text-blue-600 font-medium">Ülke</div>
+                </div>
+            `;
+                } else {
                     const regionType = item.type === 'state' ? 'Eyalet' : item.type === 'province' ? 'Eyalet' : 'Bölge';
                     return `
-                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors" 
-                             onmousedown="selectLocation('${item.name}', '${item.type}', ${item.lat}, ${item.lng}, '${item.country}', '${item.name}')">
-                            <div class="font-medium text-gray-800">${item.country}, ${item.name}</div>
-                            <div class="text-sm text-green-600 font-medium">${regionType}</div>
-                        </div>
-                    `;
-                } else {
-                    const locationInfo = item.state ? `${item.country}, ${item.state}, ${item.name}` : 
-                                       item.province ? `${item.country}, ${item.province}, ${item.name}` : 
-                                       `${item.country}, ${item.name}`;
-                    const stateOrProvince = item.state || item.province || '';
-                    return `
-                        <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors" 
-                             onmousedown="selectLocation('${item.name}', 'city', ${item.lat}, ${item.lng}, '${item.country}', '${stateOrProvince}')">
-                            <div class="font-medium text-gray-800">${locationInfo}</div>
-                            <div class="text-sm text-orange-600 font-medium">Şehir</div>
-                        </div>
-                    `;
+                <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors" 
+                     onmousedown="selectLocation('${item.name}', '${item.type}', ${item.lat}, ${item.lng}, '${item.country}', '${item.name}')">
+                    <div class="font-medium text-gray-800">${item.country}, ${item.name}</div>
+                    <div class="text-sm text-green-600 font-medium">${regionType}</div>
+                </div>
+            `;
                 }
             }).join('');
-            
+
             dropdown.classList.remove('hidden');
         }
-        
         function hideSearchSuggestions() {
             setTimeout(() => {
                 document.getElementById('searchSuggestions').classList.add('hidden');
             }, 200);
         }
-        
+
         function selectLocation(name, type, lat, lng, country, stateOrProvince) {
             // Create full location name for display
             let fullLocationName = name;
@@ -1755,14 +1767,14 @@
             } else if (type === 'state' || type === 'province' || type === 'territory') {
                 fullLocationName = `${name}, ${country}`;
             }
-            
+
             document.getElementById('searchInput').value = fullLocationName;
             document.getElementById('searchSuggestions').classList.add('hidden');
             updateLocationData(fullLocationName, lat, lng, type, country, stateOrProvince);
-            
+
             if (map) {
                 let zoomLevel;
-                switch(type) {
+                switch (type) {
                     case 'country':
                         zoomLevel = 4;
                         break;
@@ -1777,7 +1789,7 @@
                     default:
                         zoomLevel = 8;
                 }
-                
+
                 // Force map resize and then set view
                 map.invalidateSize();
                 setTimeout(() => {
@@ -1789,20 +1801,20 @@
                 }, 200);
             }
         }
-        
+
         // Navigation functions
         function showSection(sectionName) {
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.add('hidden');
             });
-            
+
             // Show selected section
             const targetSection = document.getElementById(sectionName + 'Section');
             if (targetSection) {
                 targetSection.classList.remove('hidden');
             }
-            
+
             // If showing map section, resize the map
             if (sectionName === 'map' && map) {
                 setTimeout(() => {
@@ -1813,68 +1825,68 @@
                     }
                 }, 100);
             }
-            
+
             // Update navigation buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('bg-white', 'bg-opacity-20');
             });
-            
+
             // Close mobile menu
             document.getElementById('mobileMenu').classList.add('hidden');
         }
-        
+
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
         }
-        
+
         // Forecast functions
         function showForecast(type) {
             // Update buttons
-            document.getElementById('forecast7Day').className = type === '7day' ? 
+            document.getElementById('forecast5Day').className = type === '5day' ?
                 'px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium shadow-sm' :
                 'px-6 py-3 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors font-medium';
-            
-            document.getElementById('forecast24Hour').className = type === '24hour' ? 
+
+            document.getElementById('forecast24Hour').className = type === '24hour' ?
                 'px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium shadow-sm' :
                 'px-6 py-3 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors font-medium';
-            
+
             // Show/hide data
-            document.getElementById('forecast7DayData').classList.toggle('hidden', type !== '7day');
+            document.getElementById('forecast5DayData').classList.toggle('hidden', type !== '5day');
             document.getElementById('forecast24HourData').classList.toggle('hidden', type !== '24hour');
         }
-        
+
         // Map functions
         let statePolygons = [];
-        
+
         function initializeMap() {
             try {
                 // Wait for map container to be visible
                 setTimeout(() => {
                     if (document.getElementById('map')) {
                         map = L.map('map').setView([45.0, -100.0], 4); // North America center
-                        
+
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '© OpenStreetMap contributors'
                         }).addTo(map);
-                        
+
                         // Force map to resize after initialization
                         setTimeout(() => {
                             if (map) {
                                 map.invalidateSize();
                             }
                         }, 100);
-                        
+
                         // Add sample markers for North American cities
                         const sampleLocations = [
-                            {lat: 40.7128, lng: -74.0060, aqi: 65, name: 'New York City', pm25: 15, pm10: 22, no2: 28, o3: 85, temp: 22},
-                            {lat: 34.0522, lng: -118.2437, aqi: 85, name: 'Los Angeles', pm25: 25, pm10: 35, no2: 35, o3: 95, temp: 28},
-                            {lat: 41.8781, lng: -87.6298, aqi: 42, name: 'Chicago', pm25: 12, pm10: 18, no2: 22, o3: 75, temp: 18},
-                            {lat: 43.6532, lng: -79.3832, aqi: 38, name: 'Toronto', pm25: 10, pm10: 15, no2: 20, o3: 70, temp: 15},
-                            {lat: 49.2827, lng: -123.1207, aqi: 32, name: 'Vancouver', pm25: 8, pm10: 12, no2: 18, o3: 65, temp: 12},
-                            {lat: 19.4326, lng: -99.1332, aqi: 125, name: 'Mexico City', pm25: 45, pm10: 65, no2: 55, o3: 120, temp: 25}
+                            { lat: 40.7128, lng: -74.0060, aqi: 65, name: 'New York City', pm25: 15, pm10: 22, no2: 28, o3: 85, temp: 22 },
+                            { lat: 34.0522, lng: -118.2437, aqi: 85, name: 'Los Angeles', pm25: 25, pm10: 35, no2: 35, o3: 95, temp: 28 },
+                            { lat: 41.8781, lng: -87.6298, aqi: 42, name: 'Chicago', pm25: 12, pm10: 18, no2: 22, o3: 75, temp: 18 },
+                            { lat: 43.6532, lng: -79.3832, aqi: 38, name: 'Toronto', pm25: 10, pm10: 15, no2: 20, o3: 70, temp: 15 },
+                            { lat: 49.2827, lng: -123.1207, aqi: 32, name: 'Vancouver', pm25: 8, pm10: 12, no2: 18, o3: 65, temp: 12 },
+                            { lat: 19.4326, lng: -99.1332, aqi: 125, name: 'Mexico City', pm25: 45, pm10: 65, no2: 55, o3: 120, temp: 25 }
                         ];
-                        
+
                         updateMapMarkers(sampleLocations);
                     }
                 }, 500);
@@ -1891,62 +1903,62 @@
                 `;
             }
         }
-        
+
         function addStatePolygons() {
             // State polygons removed - showing only city points now
         }
-        
+
         function updateStatePolygons() {
             // State polygon updates removed - only city points are shown
         }
-        
+
         function changeMapLayer(layer) {
             currentMapLayer = layer;
-            
+
             // Update button styles
             document.querySelectorAll('[id^="layer"]').forEach(btn => {
                 btn.className = 'px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium';
             });
-            
+
             const activeBtn = document.getElementById('layer' + layer.toUpperCase().replace('25', '25').replace('10', '10'));
             if (activeBtn) {
                 activeBtn.className = 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium';
             }
-            
+
             // Update map markers with new data layer
             const sampleLocations = [
-                {lat: 40.7128, lng: -74.0060, name: 'New York City', pm25: 15, pm10: 22, no2: 28, o3: 85, co: 0.8},
-                {lat: 34.0522, lng: -118.2437, name: 'Los Angeles', pm25: 25, pm10: 35, no2: 35, o3: 95, co: 1.2},
-                {lat: 41.8781, lng: -87.6298, name: 'Chicago', pm25: 12, pm10: 18, no2: 22, o3: 75, co: 0.6},
-                {lat: 43.6532, lng: -79.3832, name: 'Toronto', pm25: 10, pm10: 15, no2: 20, o3: 70, co: 0.5},
-                {lat: 49.2827, lng: -123.1207, name: 'Vancouver', pm25: 8, pm10: 12, no2: 18, o3: 65, co: 0.4},
-                {lat: 19.4326, lng: -99.1332, name: 'Mexico City', pm25: 45, pm10: 65, no2: 55, o3: 120, co: 2.1}
+                { lat: 40.7128, lng: -74.0060, name: 'New York City', pm25: 15, pm10: 22, no2: 28, o3: 85, co: 0.8 },
+                { lat: 34.0522, lng: -118.2437, name: 'Los Angeles', pm25: 25, pm10: 35, no2: 35, o3: 95, co: 1.2 },
+                { lat: 41.8781, lng: -87.6298, name: 'Chicago', pm25: 12, pm10: 18, no2: 22, o3: 75, co: 0.6 },
+                { lat: 43.6532, lng: -79.3832, name: 'Toronto', pm25: 10, pm10: 15, no2: 20, o3: 70, co: 0.5 },
+                { lat: 49.2827, lng: -123.1207, name: 'Vancouver', pm25: 8, pm10: 12, no2: 18, o3: 65, co: 0.4 },
+                { lat: 19.4326, lng: -99.1332, name: 'Mexico City', pm25: 45, pm10: 65, no2: 55, o3: 120, co: 2.1 }
             ];
-            
+
             updateMapMarkers(sampleLocations);
-            
+
             // Update current location marker with new layer data
             if (currentLocationData && currentLocationData.lat && currentLocationData.lng) {
                 addCurrentLocationMarker(currentLocationData.lat, currentLocationData.lng, currentLocationData.name, currentLocationData);
             }
         }
-        
+
         let currentLocationMarker = null;
-        
+
         function updateMapMarkers(locations) {
             if (!map) return;
-            
+
             // Clear existing markers (except current location marker)
             map.eachLayer(layer => {
                 if (layer instanceof L.CircleMarker && layer !== currentLocationMarker) {
                     map.removeLayer(layer);
                 }
             });
-            
+
             locations.forEach(location => {
                 let value, unit, color;
-                
-                switch(currentMapLayer) {
+
+                switch (currentMapLayer) {
                     case 'pm25':
                         value = location.pm25;
                         unit = 'µg/m³';
@@ -1977,7 +1989,7 @@
                         unit = 'µg/m³';
                         color = getPollutantColor(value, 'pm25');
                 }
-                
+
                 const marker = L.circleMarker([location.lat, location.lng], {
                     radius: 15,
                     fillColor: color,
@@ -1986,7 +1998,7 @@
                     opacity: 0,
                     fillOpacity: 1.0
                 }).addTo(map);
-                
+
                 marker.bindPopup(`
                     <div class="text-center">
                         <h3 class="font-bold">${location.name}</h3>
@@ -1996,18 +2008,18 @@
                 `);
             });
         }
-        
+
         function addCurrentLocationMarker(lat, lng, locationName, data) {
             if (!map) return;
-            
+
             // Remove existing current location marker
             if (currentLocationMarker) {
                 map.removeLayer(currentLocationMarker);
             }
-            
+
             // Get current layer value and color
             let value, unit, color;
-            switch(currentMapLayer) {
+            switch (currentMapLayer) {
                 case 'pm25':
                     value = data.pm25;
                     unit = 'µg/m³';
@@ -2038,7 +2050,7 @@
                     unit = 'µg/m³';
                     color = getPollutantColor(value, 'pm25');
             }
-            
+
             // Create special marker for current location (larger)
             currentLocationMarker = L.circleMarker([lat, lng], {
                 radius: 20,
@@ -2048,7 +2060,7 @@
                 opacity: 0,
                 fillOpacity: 1.0
             }).addTo(map);
-            
+
             currentLocationMarker.bindPopup(`
                 <div class="text-center">
                     <h3 class="font-bold text-blue-600">📍 ${locationName}</h3>
@@ -2058,14 +2070,14 @@
                 </div>
             `);
         }
-        
+
         function getAQIColor(aqi) {
             if (aqi <= 50) return '#10b981';
             if (aqi <= 100) return '#f59e0b';
             if (aqi <= 150) return '#f97316';
             return '#ef4444';
         }
-        
+
         function getPollutantColor(value, type) {
             // Simplified color coding for pollutants
             if (type === 'pm25') {
@@ -2087,14 +2099,14 @@
             if (value <= 60) return '#f59e0b';
             return '#ef4444';
         }
-        
+
         function getTemperatureColor(temp) {
             if (temp <= 10) return '#3b82f6';
             if (temp <= 20) return '#10b981';
             if (temp <= 30) return '#f59e0b';
             return '#ef4444';
         }
-        
+
         function getStatusForValue(value, type) {
             if (type === 'co') {
                 if (value <= 1.0) return 'Düşük';
@@ -2103,19 +2115,20 @@
             }
             return value <= 30 ? 'Düşük' : value <= 60 ? 'Orta' : 'Yüksek';
         }
-        
+
         function getAQIStatus(aqi) {
             if (aqi <= 50) return 'İyi';
             if (aqi <= 100) return 'Orta';
             if (aqi <= 150) return 'Sağlıksız';
             return 'Tehlikeli';
         }
-        
+
         // Global variable to store current location data
+        // Varsayılan konumu bir şehir yerine ülke veya eyalet yapın
         let currentLocationData = {
-            name: 'New York City, ABD',
-            lat: 40.7128,
-            lng: -74.0060,
+            name: 'New York Eyaleti, ABD', // Şehir yerine eyalet
+            lat: 42.1657, // New York eyaleti koordinatları
+            lng: -74.9481,
             aqi: 42,
             pm25: 12,
             pm10: 18,
@@ -2124,7 +2137,7 @@
             co: 0.8,
             temp: 22
         };
-        
+
         // Health preferences
         let healthPreferences = {
             ageGroup: 'adult',
@@ -2132,11 +2145,11 @@
             isBreastfeeding: false,
             conditions: []
         };
-        
+
         // Smart notifications system
         let smartNotifications = [];
-        let notificationIdCounter = 0;
-        
+        let notificationIdCounter = Date.now();
+
         // Search and location functions
         function searchLocation() {
             const query = document.getElementById('searchInput').value;
@@ -2148,7 +2161,7 @@
                 }, 1000);
             }
         }
-        
+
         function getCurrentLocation() {
             if (navigator.geolocation) {
                 showNotification('Konum alınıyor...', 'info');
@@ -2156,22 +2169,22 @@
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
-                        
+
                         // Kuzey Amerika sınırları kontrolü
                         const isInNorthAmerica = (
                             lat >= 14.0 && lat <= 83.0 && // Enlem: Meksika güneyinden Kanada kuzeyine
                             lng >= -168.0 && lng <= -52.0  // Boylam: Alaska batısından Newfoundland doğusuna
                         );
-                        
+
                         if (!isInNorthAmerica) {
                             showNotification('Bulunduğunuz konum için sistem çalışmıyor. Sadece Kuzey Amerika desteklenmektedir.', 'warning');
                             return;
                         }
-                        
+
                         const locationName = `Mevcut Konum (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
                         updateLocationData(locationName, lat, lng, 'current', 'Bilinmiyor', '');
                         showNotification('Konum başarıyla alındı', 'success');
-                        
+
                         if (map) {
                             map.setView([lat, lng], 12);
                         }
@@ -2184,14 +2197,14 @@
                 showNotification('Tarayıcınız konum servisini desteklemiyor', 'error');
             }
         }
-        
+
         function updateLocationData(location, lat, lng, type, country, stateOrProvince) {
             document.getElementById('currentLocation').textContent = `📍 ${location}`;
-            
+
             // Generate realistic data based on location and region
             let newAQI, pm25, pm10, no2, o3, co, humidity, wind, precipitation, pressure, pollen, temp;
             let sunriseTime, sunsetTime, weatherDescription, weatherIcon;
-            
+
             // Regional data patterns based on country and specific locations
             if (country === 'ABD') {
                 if (location.includes('Los Angeles') || location.includes('California')) {
@@ -2369,16 +2382,25 @@
                 sunriseTime = '06:45';
                 sunsetTime = '17:30';
             }
-            
+
             // Common calculations for all locations
             co = (Math.random() * 1.5 + 0.3).toFixed(1); // 0.3-1.8 mg/m³
             wind = Math.floor(Math.random() * 15) + 5; // 5-20 km/h
             precipitation = (Math.random() * 5).toFixed(1); // 0-5mm
             pressure = Math.floor(Math.random() * 40) + 995; // 995-1035 hPa
-            
-            const pollenLevels = ['Düşük', 'Orta', 'Yüksek'];
-            pollen = pollenLevels[Math.floor(Math.random() * pollenLevels.length)];
-            
+
+            const feelsLikeTemp = calculateFeelsLike(temp, humidity, wind);
+
+
+            const currentTemp = temp; // mevcut sıcaklık
+            const maxTemp = Math.round(currentTemp + Math.random() * 5 + 3); // Maksimum sıcaklık
+            const minTemp = Math.round(currentTemp - Math.random() * 5 - 3); // Minimum sıcaklık
+
+            // Yeni sıcaklık değerlerini güncelle
+            document.getElementById('maxTemp').textContent = maxTemp + '°C';
+            document.getElementById('minTemp').textContent = minTemp + '°C';
+
+
             // Update all displays
             updateAQIDisplay(newAQI);
             document.getElementById('pm25').textContent = pm25;
@@ -2386,15 +2408,15 @@
             document.getElementById('no2').textContent = no2;
             document.getElementById('o3').textContent = o3;
             document.getElementById('co').textContent = co;
-            
+
             // Update weather data
             document.querySelector('.text-3xl.font-bold.text-blue-600').textContent = temp + '°C';
             document.getElementById('humidityValue').textContent = humidity + '%';
             document.getElementById('windValue').textContent = wind + ' km/h';
             document.getElementById('precipitationValue').textContent = precipitation + 'mm';
             document.getElementById('pressureValue').textContent = pressure;
-            document.getElementById('pollenValue').textContent = pollen;
-            
+            document.getElementById('feelsLikeTemp').textContent = feelsLikeTemp + '°C';
+
             // Update weather description
             const weatherElements = document.querySelectorAll('.text-sm.text-gray-600');
             weatherElements.forEach(element => {
@@ -2402,11 +2424,9 @@
                     element.textContent = weatherDescription;
                 }
             });
-            
-            // Update sunrise/sunset times
-            document.getElementById('sunriseTime').textContent = sunriseTime;
-            document.getElementById('sunsetTime').textContent = sunsetTime;
-            
+
+
+
             // Update current location data for map
             currentLocationData = {
                 name: location,
@@ -2420,71 +2440,71 @@
                 co: parseFloat(co),
                 temp: temp
             };
-            
+
             // Add current location marker to map
             if (lat && lng) {
                 addCurrentLocationMarker(lat, lng, location, currentLocationData);
             }
-            
+
             // Update all forecast data to match the region
             updateForecastData(country, stateOrProvince, temp, newAQI);
-            
+
             // Clear existing notifications and generate new ones based on new location
             smartNotifications = [];
-            
+
             // Generate and display smart notifications for new location
             const newNotifications = generateSmartNotifications(currentLocationData, country, temp, newAQI);
             smartNotifications = [...smartNotifications, ...newNotifications];
-            
+
             // Also generate health-based notifications for new location
             const healthNotifications = generateHealthBasedNotifications();
             smartNotifications = [...smartNotifications, ...healthNotifications];
-            
+
             displaySmartNotifications(smartNotifications);
-            
+
             showNotification(`${location} için veriler güncellendi`, 'success');
         }
-        
+
         // Function to update forecast data based on region
         function updateForecastData(country, stateOrProvince, baseTemp, baseAQI) {
             // Update 7-day forecast table
-            const forecastRows = document.querySelectorAll('#forecast7DayData tbody tr');
-            
+            const forecastRows = document.querySelectorAll('#forecast5DayData tbody tr');
+
             forecastRows.forEach((row, index) => {
                 const tempCell = row.querySelector('.text-xl.font-bold');
                 const aqiCell = row.querySelector('.text-lg.font-semibold:last-child');
                 const humidityCell = row.querySelector('.text-lg.font-semibold.text-cyan-600');
                 const windCell = row.querySelector('.text-lg.font-semibold.text-violet-600');
-                
+
                 if (tempCell && aqiCell) {
                     // Generate temperature variation based on region and day
                     let tempVariation = Math.floor(Math.random() * 8) - 4; // -4 to +4
                     let newTemp = baseTemp + tempVariation;
-                    
+
                     // Regional temperature adjustments
                     if (country === 'Kanada') {
                         newTemp = Math.max(newTemp - 5, -5); // Colder for Canada
                     } else if (country === 'Meksika') {
                         newTemp = Math.min(newTemp + 3, 40); // Warmer for Mexico
                     }
-                    
+
                     // AQI variation
                     let aqiVariation = Math.floor(Math.random() * 20) - 10; // -10 to +10
                     let newAQI = Math.max(15, Math.min(200, baseAQI + aqiVariation));
-                    
+
                     // Update cells
                     tempCell.textContent = `${newTemp}°C`;
                     aqiCell.textContent = newAQI;
-                    
+
                     // Update AQI status
                     const statusCell = aqiCell.nextElementSibling;
                     if (statusCell) {
                         statusCell.textContent = getAQIStatus(newAQI);
-                        
+
                         // Update AQI color
                         aqiCell.className = `text-lg font-semibold ${getAQIColorClass(newAQI)}`;
                     }
-                    
+
                     // Update humidity based on region
                     if (humidityCell) {
                         let humidity = Math.floor(Math.random() * 30) + 50;
@@ -2492,7 +2512,7 @@
                         if (country === 'Meksika' && !stateOrProvince?.includes('Baja')) humidity += 10;
                         humidityCell.textContent = `${Math.min(95, humidity)}%`;
                     }
-                    
+
                     // Update wind
                     if (windCell) {
                         let wind = Math.floor(Math.random() * 15) + 5;
@@ -2500,60 +2520,60 @@
                     }
                 }
             });
-            
+
             // Update 24-hour forecast table
             const hourlyRows = document.querySelectorAll('#forecast24HourData tbody tr');
-            
+
             hourlyRows.forEach((row, index) => {
                 const tempCell = row.querySelector('.font-bold');
                 const humidityCell = row.querySelector('.text-cyan-600');
                 const windCell = row.querySelector('.text-violet-600');
-                
+
                 if (tempCell) {
                     // Hourly temperature variation (smaller changes)
                     let hourlyTemp = baseTemp + Math.floor(Math.random() * 6) - 3;
-                    
+
                     // Regional adjustments
                     if (country === 'Kanada') {
                         hourlyTemp = Math.max(hourlyTemp - 3, -10);
                     } else if (country === 'Meksika') {
                         hourlyTemp = Math.min(hourlyTemp + 2, 38);
                     }
-                    
+
                     tempCell.textContent = `${hourlyTemp}°C`;
                 }
-                
+
                 if (humidityCell) {
                     let humidity = Math.floor(Math.random() * 25) + 55;
                     if (country === 'Kanada') humidity += 10;
                     humidityCell.textContent = `${Math.min(95, humidity)}%`;
                 }
-                
+
                 if (windCell) {
                     let wind = Math.floor(Math.random() * 12) + 5;
                     windCell.textContent = `${wind} km/h`;
                 }
             });
         }
-        
+
         function getAQIColorClass(aqi) {
             if (aqi <= 50) return 'text-green-600';
             if (aqi <= 100) return 'text-yellow-600';
             if (aqi <= 150) return 'text-orange-600';
             return 'text-red-600';
         }
-        
+
         function updateAQIDisplay(aqi) {
             document.getElementById('aqiValue').textContent = aqi;
             document.getElementById('aqiStatus').textContent = getAQIStatus(aqi);
-            
+
             const circle = document.getElementById('aqiCircle');
             const value = document.getElementById('aqiValue');
             const status = document.getElementById('aqiStatus');
-            
+
             // Remove all AQI classes
             circle.className = circle.className.replace(/air-quality-\w+/g, '');
-            
+
             // Add appropriate class and update colors
             if (aqi <= 50) {
                 circle.classList.add('air-quality-good');
@@ -2576,46 +2596,88 @@
                 status.className = 'text-xl font-semibold text-violet-600';
                 circle.innerHTML = '<div class="text-center"><div class="text-2xl"></div><div class="text-xs">Tehlikeli</div></div>';
             }
-            
+
             // Update activity display when AQI changes
             updateActivityDisplay();
         }
-        
+
         // Notification system
         function showNotification(message, type = 'info') {
             const container = document.getElementById('notificationContainer');
             const notification = document.createElement('div');
-            
+
             const colors = {
                 success: 'bg-green-500',
                 error: 'bg-red-500',
                 warning: 'bg-yellow-500',
                 info: 'bg-blue-500'
             };
-            
+
             notification.className = `${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg notification-slide`;
             notification.textContent = message;
-            
+
             container.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 3000);
         }
-        
+        function displayNotifications() {
+            const container = document.getElementById('notificationContainer');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            smartNotifications.forEach(notification => {
+                if (!notification.read) {
+                    const notificationElement = document.createElement('div');
+                    notificationElement.className = `bg-${getNotificationColor(notification.type)}-100 border border-${getNotificationColor(notification.type)}-300 rounded-lg p-4 mb-2`;
+                    notificationElement.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-semibold text-${getNotificationColor(notification.type)}-800">${notification.title}</h4>
+                        <p class="text-sm text-${getNotificationColor(notification.type)}-600 mt-1">${notification.message}</p>
+                    </div>
+                    <button onclick="markNotificationAsRead(${notification.id})" class="text-${getNotificationColor(notification.type)}-500 hover:text-${getNotificationColor(notification.type)}-700">
+                        ×
+                    </button>
+                </div>
+                <div class="text-xs text-${getNotificationColor(notification.type)}-500 mt-2">${formatTime(notification.time)}</div>
+            `;
+                    container.appendChild(notificationElement);
+                }
+            });
+        }
+
+        function getNotificationColor(type) {
+            const colors = {
+                success: 'green',
+                error: 'red',
+                warning: 'yellow',
+                info: 'blue'
+            };
+            return colors[type] || 'blue';
+        }
+
+        function formatTime(time) {
+            return time.toLocaleTimeString('tr-TR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
         // Smart notification functions
         function generateSmartNotifications(locationData, country, temp, aqi) {
             const notifications = [];
             const currentTime = new Date();
-            
+
             // Konum bilgisi yoksa bildirim verme
             if (!locationData || !locationData.name) {
                 return notifications;
             }
-            
+
             // Konum bilgisi ile başlayan genel bildirimler
             const locationName = locationData.name;
-            
+
             // Daily weather summary notification
             const weatherSummary = generateDailyWeatherSummary(locationData, country, temp, aqi);
             if (weatherSummary) {
@@ -2629,7 +2691,7 @@
                     priority: 'medium'
                 });
             }
-            
+
             // Air quality notifications - only ONE notification based on AQI level
             if (aqi > 150) {
                 notifications.push({
@@ -2663,7 +2725,7 @@
                     priority: 'low'
                 });
             }
-            
+
             // Temperature notifications (only extreme cases)
             if (temp < 0) {
                 notifications.push({
@@ -2686,27 +2748,30 @@
                     priority: 'high'
                 });
             }
-            
+
             return notifications;
         }
-        
+
         function getNotificationTypeByAQI(aqi) {
             if (aqi <= 50) return 'success';
             if (aqi <= 100) return 'info';
             if (aqi <= 150) return 'warning';
             return 'error';
         }
-        
+
         function generateDailyWeatherSummary(locationData, country, temp, aqi) {
             const currentHour = new Date().getHours();
             const humidity = parseInt(document.getElementById('humidityValue').textContent) || 68;
             const wind = parseInt(document.getElementById('windValue').textContent) || 12;
-            const pollen = document.getElementById('pollenValue').textContent || 'Orta';
-            
+            const currentFeelsLike = parseInt(document.getElementById('feelsLikeTemp').textContent) || 24;
+
+            // ✅ DÜZELTME: summary değişkenini başlat
+            let summary = '';
+
             // Generate weather condition based on data
             let weatherCondition = '';
             let weatherIcon = '';
-            
+
             if (temp >= 25 && humidity < 60 && aqi < 80) {
                 weatherCondition = 'güneşli';
                 weatherIcon = '☀️';
@@ -2723,7 +2788,7 @@
                 weatherCondition = 'değişken';
                 weatherIcon = '🌤️';
             }
-            
+
             // Generate summary based on time of day
             let timeOfDay = '';
             if (currentHour >= 6 && currentHour < 12) {
@@ -2735,38 +2800,30 @@
             } else {
                 timeOfDay = 'gece';
             }
-            
-            // Create comprehensive summary
-            let summary = `${weatherIcon} Bugün ${timeOfDay} hava ${weatherCondition} olması bekleniyor. `;
+
+            summary = `${weatherIcon} Bugün ${timeOfDay} hava ${weatherCondition} olması bekleniyor. `;
             summary += `Sıcaklık ${temp}°C, nem %${humidity}, rüzgar ${wind} km/h. `;
-            
+            summary += `Hissedilen sıcaklık ${currentFeelsLike}°C. `;
+
             if (aqi <= 50) {
-                summary += 'Hava kalitesi mükemmel, açık hava aktiviteleri için ideal. ';
+                summary += 'Hava kalitesi mükemmel, açık hava aktiviteleri için ideal.';
             } else if (aqi <= 100) {
-                summary += 'Hava kalitesi orta seviyede. ';
+                summary += 'Hava kalitesi orta seviyede.';
             } else {
-                summary += 'Hava kalitesi kötü, dikkatli olun. ';
+                summary += 'Hava kalitesi kötü, dikkatli olun.';
             }
-            
-            if (pollen === 'Yüksek') {
-                summary += 'Polen seviyesi yüksek, alerjisi olanlar dikkat etsin.';
-            } else if (pollen === 'Orta') {
-                summary += 'Polen seviyesi orta.';
-            } else {
-                summary += 'Polen seviyesi düşük.';
-            }
-            
+
             return summary;
         }
-        
+
         function generateHealthBasedNotifications() {
             const notifications = [];
             const currentTime = new Date();
             const currentAQI = parseInt(document.getElementById('aqiValue').textContent) || 42;
-            const currentPollen = document.getElementById('pollenValue').textContent || 'Orta';
+
             const currentTemp = parseInt(document.querySelector('.text-3xl.font-bold.text-blue-600').textContent) || 22;
             const currentHumidity = parseInt(document.getElementById('humidityValue').textContent) || 68;
-            
+
             // Generate UV index based on temperature and time
             const currentHour = new Date().getHours();
             let uvIndex = 0;
@@ -2788,7 +2845,7 @@
                 // Low/no UV hours
                 uvIndex = 0;
             }
-            
+
             console.log('Sağlık bildirimleri oluşturuluyor:', {
                 ageGroup: healthPreferences.ageGroup,
                 isPregnant: healthPreferences.isPregnant,
@@ -2798,7 +2855,7 @@
                 currentHumidity: currentHumidity,
                 uvIndex: uvIndex
             });
-            
+
             // UV Index notifications
             if (uvIndex > 6) {
                 notifications.push({
@@ -2811,7 +2868,7 @@
                     priority: 'high'
                 });
             }
-            
+
             // Temperature-based notifications (Sıcak Çarpması Riski)
             if (currentTemp >= 35) {
                 notifications.push({
@@ -2834,7 +2891,7 @@
                     priority: 'medium'
                 });
             }
-            
+
             // Humidity notifications
             if (currentHumidity > 80) {
                 notifications.push({
@@ -2857,7 +2914,7 @@
                     priority: 'medium'
                 });
             }
-            
+
             // Yaşlılar (65+) için uyarılar
             if (healthPreferences.ageGroup === 'elderly') {
                 if (currentAQI >= 201) {
@@ -2891,7 +2948,7 @@
                         priority: 'high'
                     });
                 }
-                
+
                 if (currentTemp >= 30 && currentTemp <= 35) {
                     notifications.push({
                         id: ++notificationIdCounter,
@@ -2904,7 +2961,7 @@
                     });
                 }
             }
-            
+
             // Hamileler için uyarılar
             if (healthPreferences.isPregnant) {
                 if (currentAQI >= 201) {
@@ -2938,7 +2995,7 @@
                         priority: 'high'
                     });
                 }
-                
+
                 if (currentTemp >= 35 && currentHumidity > 80) {
                     notifications.push({
                         id: ++notificationIdCounter,
@@ -2951,10 +3008,10 @@
                     });
                 }
             }
-            
+
             // Hastalık durumlarına göre uyarılar
             healthPreferences.conditions.forEach(condition => {
-                switch(condition) {
+                switch (condition) {
                     case 'asthma':
                         if (currentAQI >= 201) {
                             notifications.push({
@@ -2988,7 +3045,7 @@
                             });
                         }
                         break;
-                        
+
                     case 'copd':
                         if (currentAQI >= 201) {
                             notifications.push({
@@ -3022,7 +3079,7 @@
                             });
                         }
                         break;
-                        
+
                     case 'bronchitis':
                         if (currentAQI >= 201) {
                             notifications.push({
@@ -3056,7 +3113,7 @@
                             });
                         }
                         break;
-                        
+
                     case 'sinusitis':
                         if (currentAQI >= 101) {
                             notifications.push({
@@ -3070,21 +3127,9 @@
                             });
                         }
                         break;
-                        
-                    case 'allergies':
-                        if (currentPollen === 'Yüksek') {
-                            notifications.push({
-                                id: ++notificationIdCounter,
-                                type: 'warning',
-                                title: 'Alerji (Polen, Toz, Hayvan Tüyü) - Yüksek Polen',
-                                message: 'Polen ve alerjen yoğunluğu fazla! Ağaçlık alanlarda dolaşmayın.',
-                                time: currentTime,
-                                read: false,
-                                priority: 'high'
-                            });
-                        }
-                        break;
-                        
+
+
+
                     case 'heart-disease':
                         if (currentAQI >= 201) {
                             notifications.push({
@@ -3118,7 +3163,7 @@
                             });
                         }
                         break;
-                        
+
                     case 'hypertension':
                         if (currentTemp >= 35) {
                             notifications.push({
@@ -3142,7 +3187,7 @@
                             });
                         }
                         break;
-                        
+
                     case 'diabetes':
                         if (currentTemp >= 35 && currentHumidity > 80) {
                             notifications.push({
@@ -3168,17 +3213,17 @@
                         break;
                 }
             });
-            
+
             return notifications;
         }
-        
+
         function displaySmartNotifications(notifications) {
             const panel = document.getElementById('smartNotificationsPanel');
             panel.innerHTML = '';
-            
+
             // Only show unread notifications in the panel, and exclude dismissed ones
             const unreadNotifications = notifications.filter(n => !n.read && !n.dismissed);
-            
+
             // Sort by priority and time
             const sortedNotifications = unreadNotifications.sort((a, b) => {
                 const priorityOrder = { high: 3, medium: 2, low: 1 };
@@ -3187,16 +3232,16 @@
                 }
                 return b.time - a.time;
             });
-            
+
             sortedNotifications.slice(0, 3).forEach(notification => {
                 const notificationElement = createNotificationElement(notification);
                 panel.appendChild(notificationElement);
             });
-            
+
             // Update alerts section with all notifications
             updateAlertsSection(notifications);
         }
-        
+
         function createNotificationElement(notification) {
             const div = document.createElement('div');
             const colors = {
@@ -3205,46 +3250,58 @@
                 error: { bg: 'bg-red-100', icon: 'bg-red-600', text: 'text-red-900' },
                 info: { bg: 'bg-blue-100', icon: 'bg-blue-600', text: 'text-blue-900' }
             };
-            
+
             const color = colors[notification.type];
             const timeAgo = getTimeAgo(notification.time);
             const timeString = notification.time.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            
+
             div.className = `${color.bg} rounded-lg p-4 shadow-lg backdrop-blur-sm relative`;
             div.innerHTML = `
-                <div class="absolute top-2 right-2 flex items-center gap-2">
-                    <span class="text-xs ${color.text} opacity-80 font-medium">${timeString}</span>
-                    <button onclick="dismissNotification(${notification.id})" class="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="flex items-start gap-3 pr-16">
-                    <div class="w-8 h-8 ${color.icon} rounded-full flex items-center justify-center text-white text-sm flex-shrink-0 shadow-sm">
-                        ${notification.type === 'success' ? '✓' : notification.type === 'warning' ? '⚠' : notification.type === 'error' ? '✕' : 'i'}
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="font-semibold ${color.text} text-sm">${notification.title}</h4>
-                        <p class="text-sm ${color.text} opacity-90 mt-1">${notification.message}</p>
-                        <p class="text-xs ${color.text} opacity-70 mt-2">${timeAgo}</p>
-                    </div>
-                </div>
-            `;
-            
+        <div class="absolute top-2 right-2 flex items-center gap-2">
+            <span class="text-xs ${color.text} opacity-80 font-medium">${timeString}</span>
+            <button onclick="dismissNotification(${notification.id})" class="w-6 h-6 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center text-gray-700 hover:text-gray-900 transition-colors shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="flex items-start gap-3 pr-16">
+            <div class="w-8 h-8 ${color.icon} rounded-full flex items-center justify-center text-white text-sm flex-shrink-0 shadow-sm">
+                ${notification.type === 'success' ? '✓' : notification.type === 'warning' ? '⚠' : notification.type === 'error' ? '✕' : 'i'}
+            </div>
+            <div class="flex-1">
+                <h4 class="font-semibold ${color.text} text-sm">${notification.title}</h4>
+                <p class="text-sm ${color.text} opacity-90 mt-1">${notification.message}</p>
+                <p class="text-xs ${color.text} opacity-70 mt-2">${timeAgo}</p>
+            </div>
+        </div>
+    `;
+
+            // Smart notifications için de 8 saniye sonra kaldır - EKLE
+            setTimeout(() => {
+                if (div.parentNode) {
+                    div.remove();
+                    // Bildirimi smartNotifications array'inden de kaldır
+                    const index = smartNotifications.findIndex(n => n.id === notification.id);
+                    if (index > -1) {
+                        smartNotifications.splice(index, 1);
+                    }
+                }
+            }, 8000);
+
             return div;
         }
-        
+
         function updateAlertsSection(notifications) {
             const alertsList = document.getElementById('alertsList');
             alertsList.innerHTML = '';
-            
+
             notifications.forEach(notification => {
                 const alertElement = createAlertElement(notification);
                 alertsList.appendChild(alertElement);
             });
         }
-        
+
         function createAlertElement(notification) {
             const div = document.createElement('div');
             const colors = {
@@ -3253,14 +3310,14 @@
                 error: { bg: 'bg-red-100', icon: 'bg-red-600', text: 'text-red-900' },
                 info: { bg: 'bg-blue-100', icon: 'bg-blue-600', text: 'text-blue-900' }
             };
-            
+
             const color = colors[notification.type];
             const timeAgo = getTimeAgo(notification.time);
             const timeString = notification.time.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
             const readClass = notification.read ? 'opacity-60' : '';
-            
+
             div.className = `flex items-start gap-3 p-4 ${color.bg} rounded-lg ${readClass} hover:shadow-md transition-all relative`;
-            
+
             div.innerHTML = `
                 <div class="w-8 h-8 ${color.icon} rounded-full flex items-center justify-center text-white text-sm flex-shrink-0 shadow-sm">
                     ${notification.type === 'success' ? '✓' : notification.type === 'warning' ? '⚠' : notification.type === 'error' ? '✕' : 'i'}
@@ -3285,21 +3342,21 @@
                     </label>
                 </div>
             `;
-            
+
             return div;
         }
-        
+
         function dismissNotification(id) {
             // Mark notification as dismissed (only hide from live panel)
             const notification = smartNotifications.find(n => n.id === id);
             if (notification) {
                 notification.dismissed = true;
             }
-            
+
             // Remove from display panel only, stays in alerts section as unread
             displaySmartNotifications(smartNotifications);
         }
-        
+
         function toggleNotificationRead(id) {
             const notification = smartNotifications.find(n => n.id === id);
             if (notification) {
@@ -3307,12 +3364,12 @@
                 updateAlertsSection(smartNotifications);
             }
         }
-        
+
         function markNotificationAsRead(id, isChecked) {
             const notification = smartNotifications.find(n => n.id === id);
             if (notification) {
                 notification.read = isChecked;
-                
+
                 // If marked as read, remove from notifications and update display
                 if (isChecked) {
                     // Remove from smartNotifications array
@@ -3320,11 +3377,11 @@
                     if (index > -1) {
                         smartNotifications.splice(index, 1);
                     }
-                    
+
                     // Update both displays
                     displaySmartNotifications(smartNotifications);
                     updateAlertsSection(smartNotifications);
-                    
+
                     showNotification('Bildirim silindi', 'success');
                 } else {
                     // Just update the display if unchecked
@@ -3332,23 +3389,23 @@
                 }
             }
         }
-        
+
         function markAllAsRead() {
             // Remove all notifications from the array
             smartNotifications = [];
-            
+
             // Update both displays
             displaySmartNotifications(smartNotifications);
             updateAlertsSection(smartNotifications);
-            
+
             showNotification('Tüm bildirimler silindi', 'success');
         }
-        
+
         function getTimeAgo(time) {
             const now = new Date();
             const diffMs = now - time;
             const diffMins = Math.floor(diffMs / 60000);
-            
+
             if (diffMins < 1) return 'Şimdi';
             if (diffMins < 60) return `${diffMins} dakika önce`;
             const diffHours = Math.floor(diffMins / 60);
@@ -3356,7 +3413,8 @@
             const diffDays = Math.floor(diffHours / 24);
             return `${diffDays} gün önce`;
         }
-        
+
+
         function updateWindAndPollenTrends() {
             // Update wind trend
             const windTrends = [
@@ -3364,26 +3422,23 @@
                 { icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7l-9.2 9.2M7 7v10h10"></path></svg>', color: 'text-red-600', text: 'Azalıyor' },
                 { icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>', color: 'text-gray-600', text: 'Sabit' }
             ];
-            
+
             const windTrend = windTrends[Math.floor(Math.random() * windTrends.length)];
             const windTrendElement = document.getElementById('windTrend');
             if (windTrendElement) {
                 windTrendElement.className = `flex items-center ${windTrend.color}`;
                 windTrendElement.innerHTML = `${windTrend.icon}<span class="text-xs ml-1">${windTrend.text}</span>`;
             }
-            
-            // Update pollen trend
-            const pollenTrends = [
-                { icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17l9.2-9.2M17 17V7H7"></path></svg>', color: 'text-red-600', text: 'Artıyor' },
-                { icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 7l-9.2 9.2M7 7v10h10"></path></svg>', color: 'text-green-600', text: 'Azalıyor' },
-                { icon: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>', color: 'text-gray-600', text: 'Sabit' }
-            ];
-            
-            const pollenTrend = pollenTrends[Math.floor(Math.random() * pollenTrends.length)];
-            const pollenTrendElement = document.getElementById('pollenTrend');
-            if (pollenTrendElement) {
-                pollenTrendElement.className = `flex items-center ${pollenTrend.color}`;
-                pollenTrendElement.innerHTML = `${pollenTrend.icon}<span class="text-xs ml-1">${pollenTrend.text}</span>`;
+
+
+            const currentTemp = parseInt(document.querySelector('.text-3xl.font-bold.text-blue-600').textContent) || 22;
+            const currentFeelsLike = parseInt(document.getElementById('feelsLikeTemp').textContent) || 24;
+            const feelsLikeTrend = getFeelsLikeTrend(currentTemp, currentFeelsLike);
+
+            // Hissedilen sıcaklık trendini göster
+            const feelsLikeElement = document.getElementById('feelsLikeTemp');
+            if (feelsLikeElement && feelsLikeTrend) {
+                feelsLikeElement.innerHTML = `${currentFeelsLike}°C <span class="text-sm ${feelsLikeTrend.color}">${feelsLikeTrend.text}</span>`;
             }
         }
 
@@ -3394,15 +3449,25 @@
                 const currentAQI = parseInt(document.getElementById('aqiValue').textContent);
                 const change = Math.floor(Math.random() * 6) - 3; // -3 to +3
                 const newAQI = Math.max(10, Math.min(200, currentAQI + change));
-                
+
                 if (newAQI !== currentAQI) {
                     updateAQIDisplay(newAQI);
                 }
-                
-                // Update wind and pollen trends
+                // Hissedilen sıcaklık ve diğer değerleri de güncelle
+                const currentTemp = parseInt(document.querySelector('.text-3xl.font-bold.text-blue-600').textContent) || 22;
+                const currentHumidity = parseInt(document.getElementById('humidityValue').textContent) || 68;
+                const currentWind = parseInt(document.getElementById('windValue').textContent) || 12;
+
+                // Hissedilen sıcaklığı yeniden hesapla
+                const newFeelsLike = calculateFeelsLike(currentTemp, currentHumidity, currentWind);
+                document.getElementById('feelsLikeTemp').textContent = newFeelsLike + '°C';
+
+                // Update wind and other trends
                 updateWindAndPollenTrends();
             }, 30000); // Update every 30 seconds
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'983b83d7e7182c88',t:'MTc1ODY0NTk1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'983b83d7e7182c88',t:'MTc1ODY0NTk1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
 </html>
