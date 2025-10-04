@@ -71,9 +71,45 @@
             }
         }
 
+        /* Arama dropdown için z-index ayarı */
         .search-dropdown {
             max-height: 200px;
             overflow-y: auto;
+            z-index: 10000 !important;
+            /* Haritadan daha yüksek */
+            position: relative;
+        }
+
+        /* Map container için z-index ayarı */
+        #map {
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Leaflet map katmanları için z-index ayarı */
+        .leaflet-container {
+            z-index: 1;
+        }
+
+        .leaflet-pane {
+            z-index: 1;
+        }
+
+        .leaflet-top,
+        .leaflet-bottom {
+            z-index: 1;
+        }
+
+        /* Navigation için z-index */
+        nav.gradient-bg {
+            z-index: 1000;
+            position: relative;
+        }
+
+        /* Search bar için z-index */
+        .bg-white.shadow-sm.border-b {
+            z-index: 1001;
+            position: relative;
         }
 
         /* Aktivite container için yeni stil */
@@ -90,6 +126,16 @@
             width: 100%;
 
 
+        }
+
+        /* Smart Notifications Panel için z-index ayarı */
+        #smartNotificationsPanel {
+            z-index: 10002 !important;
+        }
+
+        /* Notification Container için z-index ayarı */
+        #notificationContainer {
+            z-index: 10002 !important;
         }
     </style>
 </head>
@@ -163,7 +209,7 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
             <div class="flex flex-col sm:flex-row gap-3">
                 <div class="flex-1 relative">
-                    <input type="text" id="searchInput" placeholder="Şehir ara..."
+                    <input type="text" id="searchInput" placeholder="State search..."
                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         oninput="showSearchSuggestions(this.value)" onblur="hideSearchSuggestions()"
                         onfocus="showSearchSuggestions(this.value)">
@@ -217,12 +263,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="aqiCircle"
-                        class="w-32 h-32 rounded-full air-quality-good flex items-center justify-center text-white font-bold text-lg">
-                        <div class="text-center">
-                            <div class="text-2xl"></div> <!--AQI DEGERININ RENK KODUNU GOSTERDIGI YERDEKI EMOJI YERI-->
-                            <div class="text-s">Clean</div>
-                        </div>
+                    <div id="aqiCircle" </div>
                     </div>
                 </div>
 
@@ -332,7 +373,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-black-800">precipitation</h3>
+                            <h3 class="text-lg font-semibold text-black-800">Precipitation</h3>
                             <p id="precipitationValue" class="text-3xl font-bold text-blue-600 mt-2">2.5mm</p>
                             <p class="text-sm text-gray-600">Last 24 hours</p>
                         </div>
@@ -1764,65 +1805,34 @@
         function changeMapLayer(layer) {
             currentMapLayer = layer;
 
-            // Buton stillerini güncelle
+            // Update button styles
             document.querySelectorAll('[id^="layer"]').forEach(btn => {
                 btn.className = 'px-4 py-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300 transition-colors text-sm font-medium';
             });
 
-            const activeBtn = document.getElementById('layer' + layer.toUpperCase());
+            const activeBtn = document.getElementById('layer' + layer.toUpperCase().replace('25', '25').replace('10', '10'));
             if (activeBtn) {
                 activeBtn.className = 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium';
             }
 
-            // MAP BUTONLARINA ÖZEL RANDOM VERİLER
+            // Update map markers with new data layer
             const sampleLocations = [
-                {
-                    lat: 40.7128, lng: -74.0060, name: 'New York City',
-                    // Map butonlarına özel veriler
-                    o2o2: (Math.random() * 100 + 50).toFixed(1),    // 50-150 ppb
-                    no2: (Math.random() * 40 + 10).toFixed(1),      // 10-50 µg/m³
-                    o3: (Math.random() * 60 + 40).toFixed(1),       // 40-100 µg/m³
-                    hcho: (Math.random() * 20 + 5).toFixed(1)       // 5-25 µg/m³
-                },
-                {
-                    lat: 34.0522, lng: -118.2437, name: 'Los Angeles',
-                    o2o2: (Math.random() * 120 + 60).toFixed(1),    // 60-180 ppb
-                    no2: (Math.random() * 50 + 20).toFixed(1),      // 20-70 µg/m³
-                    o3: (Math.random() * 80 + 60).toFixed(1),       // 60-140 µg/m³
-                    hcho: (Math.random() * 25 + 10).toFixed(1)      // 10-35 µg/m³
-                },
-                {
-                    lat: 41.8781, lng: -87.6298, name: 'Chicago',
-                    o2o2: (Math.random() * 80 + 30).toFixed(1),     // 30-110 ppb
-                    no2: (Math.random() * 30 + 15).toFixed(1),      // 15-45 µg/m³
-                    o3: (Math.random() * 50 + 30).toFixed(1),       // 30-80 µg/m³
-                    hcho: (Math.random() * 15 + 3).toFixed(1)       // 3-18 µg/m³
-                },
-                {
-                    lat: 43.6532, lng: -79.3832, name: 'Toronto',
-                    o2o2: (Math.random() * 70 + 20).toFixed(1),     // 20-90 ppb
-                    no2: (Math.random() * 25 + 10).toFixed(1),      // 10-35 µg/m³
-                    o3: (Math.random() * 40 + 25).toFixed(1),       // 25-65 µg/m³
-                    hcho: (Math.random() * 12 + 2).toFixed(1)       // 2-14 µg/m³
-                },
-                {
-                    lat: 49.2827, lng: -123.1207, name: 'Vancouver',
-                    o2o2: (Math.random() * 60 + 10).toFixed(1),     // 10-70 ppb
-                    no2: (Math.random() * 20 + 8).toFixed(1),       // 8-28 µg/m³
-                    o3: (Math.random() * 35 + 20).toFixed(1),       // 20-55 µg/m³
-                    hcho: (Math.random() * 10 + 1).toFixed(1)       // 1-11 µg/m³
-                },
-                {
-                    lat: 19.4326, lng: -99.1332, name: 'Mexico City',
-                    o2o2: (Math.random() * 150 + 100).toFixed(1),   // 100-250 ppb
-                    no2: (Math.random() * 80 + 40).toFixed(1),      // 40-120 µg/m³
-                    o3: (Math.random() * 100 + 80).toFixed(1),      // 80-180 µg/m³
-                    hcho: (Math.random() * 40 + 15).toFixed(1)      // 15-55 µg/m³
-                }
+                { lat: 40.7128, lng: -74.0060, name: 'New York City', pm25: 15, pm10: 22, no2: 28, o3: 85, co: 0.8 },
+                { lat: 34.0522, lng: -118.2437, name: 'Los Angeles', pm25: 25, pm10: 35, no2: 35, o3: 95, co: 1.2 },
+                { lat: 41.8781, lng: -87.6298, name: 'Chicago', pm25: 12, pm10: 18, no2: 22, o3: 75, co: 0.6 },
+                { lat: 43.6532, lng: -79.3832, name: 'Toronto', pm25: 10, pm10: 15, no2: 20, o3: 70, co: 0.5 },
+                { lat: 49.2827, lng: -123.1207, name: 'Vancouver', pm25: 8, pm10: 12, no2: 18, o3: 65, co: 0.4 },
+                { lat: 19.4326, lng: -99.1332, name: 'Mexico City', pm25: 45, pm10: 65, no2: 55, o3: 120, co: 2.1 }
             ];
 
             updateMapMarkers(sampleLocations);
+
+            // Update current location marker with new layer data
+            if (currentLocationData && currentLocationData.lat && currentLocationData.lng) {
+                addCurrentLocationMarker(currentLocationData.lat, currentLocationData.lng, currentLocationData.name, currentLocationData);
+            }
         }
+
         let currentLocationMarker = null;
 
         function updateMapMarkers(locations) {
@@ -1888,6 +1898,7 @@
                 `);
             });
         }
+
         function addCurrentLocationMarker(lat, lng, locationName, data) {
             if (!map) return;
 
@@ -1896,43 +1907,41 @@
                 map.removeLayer(currentLocationMarker);
             }
 
-            // Current location için random map verileri oluştur
-            const mapData = {
-                o2o2: (Math.random() * 100 + 30).toFixed(1),
-                no2: (Math.random() * 35 + 15).toFixed(1),
-                o3: (Math.random() * 55 + 35).toFixed(1),
-                hcho: (Math.random() * 15 + 5).toFixed(1)
-            };
-
+            // Get current layer value and color
             let value, unit, color;
             switch (currentMapLayer) {
-                case 'o2o2':
-                    value = mapData.o2o2;
-                    unit = 'ppb';
-                    color = getPollutantColor(value, 'o2o2');
+                case 'pm25':
+                    value = data.pm25;
+                    unit = 'µg/m³';
+                    color = getPollutantColor(value, 'pm25');
+                    break;
+                case 'pm10':
+                    value = data.pm10;
+                    unit = 'µg/m³';
+                    color = getPollutantColor(value, 'pm10');
                     break;
                 case 'no2':
-                    value = mapData.no2;
+                    value = data.no2;
                     unit = 'µg/m³';
                     color = getPollutantColor(value, 'no2');
                     break;
                 case 'o3':
-                    value = mapData.o3;
+                    value = data.o3;
                     unit = 'µg/m³';
                     color = getPollutantColor(value, 'o3');
                     break;
-                case 'hcho':
-                    value = mapData.hcho;
-                    unit = 'µg/m³';
-                    color = getPollutantColor(value, 'hcho');
+                case 'co':
+                    value = data.co;
+                    unit = 'mg/m³';
+                    color = getPollutantColor(value, 'co');
                     break;
                 default:
-                    value = mapData.o2o2;
-                    unit = 'ppb';
-                    color = getPollutantColor(value, 'o2o2');
+                    value = data.pm25;
+                    unit = 'µg/m³';
+                    color = getPollutantColor(value, 'pm25');
             }
 
-            // Create special marker for current location
+            // Create special marker for current location (larger)
             currentLocationMarker = L.circleMarker([lat, lng], {
                 radius: 20,
                 fillColor: color,
@@ -1943,14 +1952,15 @@
             }).addTo(map);
 
             currentLocationMarker.bindPopup(`
-        <div class="text-center">
-            <h3 class="font-bold text-blue-600">📍 ${locationName}</h3>
-            <p class="text-lg font-semibold">${getLayerDisplayName(currentMapLayer)}: ${value} ${unit}</p>
-            <p class="text-sm">${getStatusForValue(value, currentMapLayer)}</p>
-            <p class="text-xs text-gray-500 mt-1">Selected Location</p>
-        </div>
-    `);
+                <div class="text-center">
+                    <h3 class="font-bold text-blue-600">📍 ${locationName}</h3>
+                    <p class="text-lg font-semibold">${currentMapLayer.toUpperCase()}: ${value} ${unit}</p>
+                    <p class="text-sm">${getStatusForValue(value, currentMapLayer)}</p>
+                    <p class="text-xs text-gray-500 mt-1">Selected Location</p>
+                </div>
+            `);
         }
+
         function getAQIColor(aqi) {
             if (aqi <= 50) return '#10b981';
             if (aqi <= 100) return '#f59e0b';
@@ -2044,7 +2054,7 @@
 
         function getCurrentLocation() {
             if (navigator.geolocation) {
-                showNotification('Konum alınıyor...', 'info');
+                showNotification('Location fetching..', 'info');
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
@@ -2545,7 +2555,7 @@
                 notifications.push({
                     id: ++notificationIdCounter,
                     type: getNotificationTypeByAQI(aqi),
-                    title: `${locationName} - Günlük Hava Durumu`,
+                    title: `${locationName} - Daily Weather`,
                     message: weatherSummary,
                     time: currentTime,
                     read: false,
@@ -2600,46 +2610,46 @@
             let weatherIcon = '';
 
             if (temp >= 25 && humidity < 60 && aqi < 80) {
-                weatherCondition = 'güneşli';
+                weatherCondition = 'sunny';
                 weatherIcon = '☀️';
             } else if (temp >= 20 && temp < 25 && humidity < 70) {
-                weatherCondition = 'parçalı bulutlu';
+                weatherCondition = 'partly cloudy';
                 weatherIcon = '⛅';
             } else if (humidity > 80 || temp < 15) {
-                weatherCondition = 'bulutlu';
+                weatherCondition = 'cloudy';
                 weatherIcon = '☁️';
             } else if (humidity > 85) {
-                weatherCondition = 'yağmurlu';
+                weatherCondition = 'rainy';
                 weatherIcon = '🌧️';
             } else {
-                weatherCondition = 'değişken';
+                weatherCondition = 'variable';
                 weatherIcon = '🌤️';
             }
 
             let timeOfDay = '';
             if (currentHour >= 6 && currentHour < 12) {
-                timeOfDay = 'sabah';
+                timeOfDay = 'morning';
             } else if (currentHour >= 12 && currentHour < 18) {
-                timeOfDay = 'öğleden sonra';
+                timeOfDay = 'afternoon';
             } else if (currentHour >= 18 && currentHour < 22) {
-                timeOfDay = 'akşam';
+                timeOfDay = 'evening';
             } else {
-                timeOfDay = 'gece';
+                timeOfDay = 'night';
             }
 
-            // Lokasyon ismini al (ülke veya eyalet adı)
+            // Get location name (country or state)
             const locationName = locationData.name || 'Unknown Location';
 
-            summary = `${weatherIcon} ${locationName} - Bugün ${timeOfDay}, havanın ${weatherCondition} olması bekleniyor. `;
-            summary += `Sıcaklık ${temp}°C, nem %${humidity}, rüzgar ${wind} km/s. `;
-            summary += `Hissedilen sıcaklık ${currentFeelsLike}°C. `;
+            summary = `${weatherIcon} ${locationName} - Today ${timeOfDay}, the weather is expected to be ${weatherCondition}. `;
+            summary += `Temperature ${temp}°C, humidity ${humidity}%, wind ${wind} km/h. `;
+            summary += `Feels like ${currentFeelsLike}°C. `;
 
             if (aqi <= 50) {
-                summary += 'Hava kalitesi mükemmel, açık hava aktiviteleri için ideal.';
+                summary += 'Air quality is excellent, ideal for outdoor activities.';
             } else if (aqi <= 100) {
-                summary += 'Hava kalitesi orta seviyede.';
+                summary += 'Air quality is moderate.';
             } else {
-                summary += 'Hava kalitesi kötü, dikkatli olun.';
+                summary += 'Air quality is poor, take caution.';
             }
 
             return summary;
@@ -3211,7 +3221,7 @@
                     displaySmartNotifications(smartNotifications);
                     updateAlertsSection(smartNotifications);
 
-                    showNotification('Bildirim silindi', 'success');
+                    showNotification('Notification deleted.', 'success');
                 } else {
                     // Just update the display if unchecked
                     updateAlertsSection(smartNotifications);
@@ -3270,82 +3280,6 @@
                 feelsLikeElement.innerHTML = `${currentFeelsLike}°C <span class="text-sm ${feelsLikeTrend.color}">${feelsLikeTrend.text}</span>`;
             }
         }
-        // ========== MAP LAYER FONKSİYONLARI ==========
-        // Layer isimlerini güzel göster
-        function getLayerDisplayName(layer) {
-            const names = {
-                'o2o2': 'O₂O₂',
-                'no2': 'NO₂',
-                'o3': 'O₃',
-                'hcho': 'HCHO'
-            };
-            return names[layer] || layer;
-        }
-
-        // Renk kodlamasını güncelle
-        function getPollutantColor(value, type) {
-            const numValue = parseFloat(value);
-
-            // Her pollutant için farklı eşik değerler
-            if (type === 'o2o2') {
-                if (numValue <= 50) return '#10b981';    // İyi
-                if (numValue <= 100) return '#f59e0b';   // Orta
-                if (numValue <= 150) return '#f97316';   // Sağlıksız
-                return '#ef4444';                        // Tehlikeli
-            }
-            if (type === 'no2') {
-                if (numValue <= 20) return '#10b981';
-                if (numValue <= 40) return '#f59e0b';
-                if (numValue <= 60) return '#f97316';
-                return '#ef4444';
-            }
-            if (type === 'o3') {
-                if (numValue <= 50) return '#10b981';
-                if (numValue <= 70) return '#f59e0b';
-                if (numValue <= 90) return '#f97316';
-                return '#ef4444';
-            }
-            if (type === 'hcho') {
-                if (numValue <= 10) return '#10b981';
-                if (numValue <= 20) return '#f59e0b';
-                if (numValue <= 30) return '#f97316';
-                return '#ef4444';
-            }
-
-            return '#10b981';
-        }
-
-        // Durum metnini güncelle
-        function getStatusForValue(value, type) {
-            const numValue = parseFloat(value);
-
-            if (type === 'o2o2') {
-                if (numValue <= 50) return 'Good';
-                if (numValue <= 100) return 'Moderate';
-                if (numValue <= 150) return 'Unhealthy';
-                return 'Hazardous';
-            }
-            if (type === 'no2') {
-                if (numValue <= 20) return 'Good';
-                if (numValue <= 40) return 'Moderate';
-                if (numValue <= 60) return 'Unhealthy';
-                return 'Hazardous';
-            }
-            if (type === 'o3') {
-                if (numValue <= 50) return 'Good';
-                if (numValue <= 70) return 'Moderate';
-                if (numValue <= 90) return 'Unhealthy';
-                return 'Hazardous';
-            }
-            if (type === 'hcho') {
-                if (numValue <= 10) return 'Good';
-                if (numValue <= 20) return 'Moderate';
-                if (numValue <= 30) return 'Unhealthy';
-                return 'Hazardous';
-            }
-
-            return 'Good';
-        }
 
         // Data update simulation
         function startDataUpdates() {
@@ -3371,143 +3305,119 @@
                 updateWindAndPollenTrends();
             }, 30000); // Update every 30 seconds
         }
-        // Data update simulation
-        function startDataUpdates() {
-            setInterval(() => {
-                // Simulate small AQI changes
-                const currentAQI = parseInt(document.getElementById('aqiValue').textContent);
-                const change = Math.floor(Math.random() * 6) - 3; // -3 to +3
-                const newAQI = Math.max(10, Math.min(200, currentAQI + change));
-
-                if (newAQI !== currentAQI) {
-                    updateAQIDisplay(newAQI);
-                }
-                // Hissedilen sıcaklık ve diğer değerleri de güncelle
-                const currentTemp = parseInt(document.querySelector('.text-3xl.font-bold.text-blue-600').textContent) || 22;
-                const currentHumidity = parseInt(document.getElementById('humidityValue').textContent) || 68;
-                const currentWind = parseInt(document.getElementById('windValue').textContent) || 12;
-
-                // Hissedilen sıcaklığı yeniden hesapla
-                const newFeelsLike = calculateFeelsLike(currentTemp, currentHumidity, currentWind);
-                document.getElementById('feelsLikeTemp').textContent = newFeelsLike + '°C';
-
-                // Update wind and other trends
-                updateWindAndPollenTrends();
-            }, 30000); // Update every 30 seconds
-        }
-        // ========== AKTİVİTE KONTROL SİSTEMİ ==========
+        // ========== BACKEND AKTİVİTE KONTROL SİSTEMİ ==========
         function checkActivity(activity, temp, wind, rain, aqi, pm25) {
             rain = Boolean(rain);
-            let status = "Uygun";
+            let status = "Suitable";
             let reasons = [];
 
             // Hava kalitesi kontrolü
             if (aqi >= 4 || pm25 > 50) {
-                status = "Uygun Değil";
-                reasons.push("Hava kalitesi yüksek (AQI/PM2.5)");
+                status = "Not Suitable";
+                reasons.push("Air quality risky (AQI/PM2.5)");
             }
 
             switch (activity) {
                 case 'swimming':
                     if (temp < 20) {
-                        status = "Uygun Değil";
-                        reasons.push("Sıcaklık yüzme için düşük");
+                        status = "Not Suitable";
+                        reasons.push("Temperature too low for swimming");
                     }
                     if (rain) {
-                        status = "Uygun Değil";
-                        reasons.push("Yağmur yüzme için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Rain not suitable for swimming");
                     }
                     if (temp >= 20 && !rain) {
-                        reasons.push("Hava yüzme için uygun");
+                        reasons.push("Weather suitable for swimming");
                     }
                     break;
 
                 case 'running':
                     if (temp < 5 || temp > 32) {
-                        status = "Uygun Değil";
-                        reasons.push("Sıcaklık koşu için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Temperature not suitable for runningl");
                     }
                     if (wind > 8) {
-                        status = "Uygun Değil";
-                        reasons.push("Rüzgar koşu için yüksek");
+                        status = "Not Suitable";
+                        reasons.push("Wind too strong for running");
                     }
                     if (temp >= 5 && temp <= 32 && wind <= 8) {
-                        reasons.push("Hava koşu için uygun");
+                        reasons.push("Weather suitable for running");
                     }
                     break;
 
                 case 'golf':
                     if (wind > 10) {
-                        status = "Uygun Değil";
-                        reasons.push("Rüzgar golf için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Wind not suitable for golf");
                     }
                     if (rain) {
-                        status = "Uygun Değil";
-                        reasons.push("Yağmur golf için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Rain not suitable for golf");
                     }
                     if (wind <= 10 && !rain) {
-                        reasons.push("Hava golf için uygun");
+                        reasons.push("Weather suitable for golf");
                     }
                     break;
 
                 case 'walking':
                 case 'hiking':
                     if (temp < 5 || temp > 35) {
-                        status = "Uygun Değil";
-                        reasons.push("Sıcaklık yürüyüş için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Temperature not suitable for walking");
                     }
                     if (rain) {
-                        status = "Uygun Değil";
-                        reasons.push("Yağmur yürüyüş için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Rain not suitable for walking");
                     }
                     if (temp >= 5 && temp <= 35 && !rain) {
-                        reasons.push("Hava yürüyüş için uygun");
+                        reasons.push("Weather suitable for walking");
                     }
                     break;
 
                 case 'cycling':
                     if (wind > 9) {
                         status = "Uygun Değil";
-                        reasons.push("Rüzgar bisiklet için tehlikeli");
+                        reasons.push("Wind dangerous for cycling");
                     }
                     if (rain) {
                         status = "Uygun Değil";
-                        reasons.push("Yağmur bisiklet için uygun değil");
+                        reasons.push("Rain not suitable for cycling");
                     }
                     if (wind <= 9 && !rain) {
-                        reasons.push("Hava bisiklet için uygun");
+                        reasons.push("Weather suitable for cycling");
                     }
                     break;
 
                 case 'tennis':
                     if (wind > 12) {
-                        status = "Uygun Değil";
-                        reasons.push("Rüzgar tenis için çok şiddetli");
+                        status = "Not Suitable";
+                        reasons.push("Wind too strong for tennis");
                     }
                     if (rain) {
-                        status = "Uygun Değil";
-                        reasons.push("Yağmur tenis için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Rain not suitable for tennis");
                     }
                     if (wind <= 12 && !rain) {
-                        reasons.push("Hava tenis için uygun");
+                        reasons.push("Weather suitable for tennis");
                     }
                     break;
 
                 case 'sports':
                     if (temp < 0 || temp > 36) {
-                        status = "Uygun Değil";
-                        reasons.push("Sıcaklık açık hava sporu için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Temperature not suitable for outdoor sports");
                     }
                     if (rain) {
-                        status = "Uygun Değil";
-                        reasons.push("Yağmur açık hava sporları için uygun değil");
+                        status = "Not Suitable";
+                        reasons.push("Rain not suitable for outdoor sports");
                     }
                     if (wind > 15) {
-                        status = "Uygun Değil";
-                        reasons.push("Rüzgar açık hava sporları için tehlikeli");
+                        status = "Not Suitable";
+                        reasons.push("Wind dangerous for outdoor sports");
                     }
                     if (temp >= 0 && temp <= 36 && !rain && wind <= 15) {
-                        reasons.push("Hava açık hava sporları için uygun");
+                        reasons.push("Weather suitable for outdoor sports");
                     }
                     break;
             }
@@ -3517,44 +3427,44 @@
 
         // ========== YAŞ GRUBU ÖNERİLERİ ==========
         function ageGroupAdvice(ageGroup, temp, aqi, pm25) {
-            let status = "Uygun";
+            let status = "Suitable";
             let reasons = [];
 
             if (ageGroup === "child") {
                 if (aqi >= 3 || pm25 > 40) {
                     status = "Uygun Değil";
-                    reasons.push("Çocuklar için hava kalitesi riskli");
+                    reasons.push("Children: Air quality is risky. Polluted air and PM2.5 can irritate the respiratory system.");
                 }
                 if (temp < 10 || temp > 30) {
-                    status = "Uygun Değil";
-                    reasons.push("Çocuklar için sıcaklık uygun değil");
+                    status = "Not Suitable";
+                    reasons.push("Children: Temperature is not suitable. Extreme cold or heat can affect their body balance and breathing..");
                 }
-                if (status === "Uygun") {
-                    reasons.push("Çocuklar için hava uygun");
+                if (status === "Suitable") {
+                    reasons.push("The weather is suitable for children.");
                 }
             } else if (ageGroup === "adult") {
                 if (aqi >= 4 || pm25 > 50) {
-                    status = "Uygun Değil";
-                    reasons.push("Yetişkinler için hava kalitesi riskli");
+                    status = "Not Suitable";
+                    reasons.push("Adults: Air quality is risky. Polluted air and PM2.5 can affect respiratory and heart health.");
                 }
                 if (temp < 5 || temp > 32) {
-                    status = "Uygun Değil";
-                    reasons.push("Yetişkinler için sıcaklık uygun değil");
+                    status = "Not Suitable";
+                    reasons.push("Adults: Temperature is not suitable. Extreme cold or heat can put extra stress on the body.");
                 }
-                if (status === "Uygun") {
-                    reasons.push("Yetişkinler için hava uygun");
+                if (status === " Suitable") {
+                    reasons.push("The weather is suitable for adults.");
                 }
             } else if (ageGroup === "elderly") {
                 if (aqi >= 3 || pm25 > 40) {
-                    status = "Uygun Değil";
-                    reasons.push("Yaşlılar için hava kalitesi riskli");
+                    status = "Not Suitable";
+                    reasons.push("Elderly: Air quality is risky. Polluted air and PM2.5 can strain the respiratory and circulatory system.");
                 }
                 if (temp < 10 || temp > 28) {
                     status = "Uygun Değil";
-                    reasons.push("Yaşlılar için sıcaklık uygun değil");
+                    reasons.push("Elderly: Temperature is not suitable. Extreme cold or heat can increase health risks.");
                 }
-                if (status === "Uygun") {
-                    reasons.push("Yaşlılar için hava uygun");
+                if (status === "Suitable") {
+                    reasons.push("The weather is suitable for the elderly.");
                 }
             }
 
@@ -3563,32 +3473,32 @@
 
         // ========== HAMİLELİK ÖNERİLERİ ==========
         function pregnancyAdvice(statusGroup, temp, aqi, pm25) {
-            let status = "Uygun";
+            let status = "Suitable";
             let reasons = [];
 
             if (statusGroup === "pregnant") {
                 if (aqi >= 3 || pm25 > 40) {
-                    status = "Uygun Değil";
-                    reasons.push("Hamileler için hava kalitesi riskli");
+                    status = "Not Suitable";
+                    reasons.push("Pregnant women: Air quality is risky. Polluted air and PM2.5 can affect respiratory and circulatory systems.");
                 }
                 if (temp < 10 || temp > 32) {
-                    status = "Uygun Değil";
-                    reasons.push("Hamileler için sıcaklık uygun değil");
+                    status = "Not Suitable";
+                    reasons.push("Pregnant women: Temperature is not suitable. Extreme cold or heat can stress the body and circulatory system.");
                 }
-                if (status === "Uygun") {
-                    reasons.push("Hamileler için hava uygun");
+                if (status === "Suitable") {
+                    reasons.push("The weather is suitable for pregnant women.");
                 }
             } else if (statusGroup === "breastfeeding") {
                 if (aqi >= 4 || pm25 > 50) {
-                    status = "Uygun Değil";
-                    reasons.push("Emziren anneler için hava kalitesi riskli");
+                    status = "Not Suitable";
+                    reasons.push("Breastfeeding mothers: Air quality is risky. Polluted air and PM2.5 can affect the mother's respiratory system.");
                 }
                 if (temp < 10 || temp > 32) {
-                    status = "Uygun Değil";
-                    reasons.push("Emziren anneler için sıcaklık uygun değil");
+                    status = "Not Suitable";
+                    reasons.push("Breastfeeding mothers: Temperature is not suitable. Extreme cold or heat can cause stress for the mother.");
                 }
-                if (status === "Uygun") {
-                    reasons.push("Emziren anneler için hava uygun");
+                if (status === "Suitable") {
+                    reasons.push("The weather is suitable for breastfeeding mothers.");
                 }
             }
 
@@ -3597,36 +3507,36 @@
 
         // ========== SOLUNUM HASTALIKLARI ÖNERİLERİ ==========
         function respiratoryAdvice(disease, aqi, pm25) {
-            let status = "Uygun";
+            let status = "Suitable";
             let reasons = [];
 
             if (disease === "asthma" || disease === "copd") {
                 if (pm25 > 30 || aqi >= 3) {
-                    status = "Uygun Değil";
-                    reasons.push(`${getDiseaseName(disease)} hastaları için hava kalitesi riskli`);
+                    status = "Not Suitable";
+                    reasons.push(`${getDiseaseName(disease)} patients: Air quality is risky. Polluted air and PM2.5 can irritate the respiratory system.`);
                 } else {
-                    reasons.push(`${getDiseaseName(disease)} hastaları için hava uygun`);
+                    reasons.push(`The weather is suitable for ${getDiseaseName(disease)} patients.`);
                 }
             } else if (disease === "sinusitis") {
                 if (aqi >= 4) {
-                    status = "Uygun Değil";
-                    reasons.push("Sinüzit hastaları için hava kalitesi yüksek");
+                    status = "Not Suitable";
+                    reasons.push("Sinusitis patients: Air quality is high. Polluted air can irritate the sinuses");
                 } else {
-                    reasons.push("Sinüzit hastaları için hava uygun");
+                    reasons.push("The weather is suitable for sinusitis patients.");
                 }
             } else if (disease === "bronchitis") {
                 if (pm25 > 25 || aqi >= 3) {
-                    status = "Uygun Değil";
-                    reasons.push("Kronik bronşit hastaları için hava kalitesi riskli");
+                    status = "Not Suitable";
+                    reasons.push("Chronic bronchitis patients: Air quality is risky. PM2.5 and polluted air can strain the bronchi.");
                 } else {
-                    reasons.push("Kronik bronşit hastaları için hava uygun");
+                    reasons.push("The weather is suitable for chronic bronchitis patients");
                 }
             } else if (disease === "allergies") {
                 if (aqi >= 3) {
-                    status = "Uygun Değil";
-                    reasons.push("Alerjisi olanlar için hava kalitesi riskli");
+                    status = "Not Suitable";
+                    reasons.push("Allergy sufferers: Air quality is risky. Pollution can increase allergic reactions.");
                 } else {
-                    reasons.push("Alerjisi olanlar için hava uygun");
+                    reasons.push("The weather is suitable for allergy sufferers.");
                 }
             }
 
@@ -3640,24 +3550,24 @@
 
             if (disease === "diabetes") {
                 if (temp < 5 || temp > 32 || aqi >= 4 || pm25 > 50) {
-                    status = "Uygun Değil";
-                    reasons.push("Diyabet hastaları için riskli hava koşulları");
+                    status = "Not Suitable";
+                    reasons.push("Risky weather conditions for diabetes patients. Extreme temperatures or polluted air may affect blood sugar balance.");
                 } else {
-                    reasons.push("Diyabet hastaları için hava uygun");
+                    reasons.push("Risky weather conditions for diabetes patients. Extreme temperatures or polluted air may affect blood sugar balance.");
                 }
             } else if (disease === "heart-disease") {
                 if (temp < 5 || temp > 30 || aqi >= 4 || pm25 > 50) {
-                    status = "Uygun Değil";
-                    reasons.push("Kalp hastaları için riskli hava koşulları");
+                    status = "Not Suitable";
+                    reasons.push("Risky weather conditions for heart disease patients. Heat and air pollution can increase stress on the heart");
                 } else {
-                    reasons.push("Kalp hastaları için hava uygun");
+                    reasons.push("The weather is suitable for heart disease patients");
                 }
             } else if (disease === "hypertension") {
                 if (temp < 5 || temp > 30 || aqi >= 4 || pm25 > 50) {
-                    status = "Uygun Değil";
-                    reasons.push("Hipertansiyon hastaları için riskli hava koşulları");
+                    status = "Not Suitable";
+                    reasons.push("Risky weather conditions for hypertension patients. Temperature changes and polluted air can raise blood pressure");
                 } else {
-                    reasons.push("Hipertansiyon hastaları için hava uygun");
+                    reasons.push("The weather is suitable for hypertension patients.");
                 }
             }
 
@@ -3667,43 +3577,44 @@
         // ========== YARDIMCI FONKSİYONLAR ==========
         function getDiseaseName(disease) {
             const names = {
-                'asthma': 'Astım',
-                'copd': 'KOAH',
-                'bronchitis': 'Kronik Bronşit',
-                'sinusitis': 'Sinüzit',
-                'allergies': 'Alerji',
-                'heart-disease': 'Kalp Hastalığı',
-                'hypertension': 'Hipertansiyon',
-                'diabetes': 'Diyabet'
+                'asthma': 'Asthma',
+                'copd': 'COPD',
+                'bronchitis': 'Chronic Bronchitis',
+                'sinusitis': 'Sinusitis',
+                'allergies': 'Allergies',
+                'heart-disease': 'Heart Disease',
+                'hypertension': 'Hypertension',
+                'diabetes': 'Diabetes'
+
             };
             return names[disease] || disease;
         }
 
         function getActivityName(activityId) {
             const names = {
-                'running': 'Koşu',
-                'cycling': 'Bisiklet',
-                'walking': 'Yürüyüş',
-                'sports': 'Açık Hava Sporları',
-                'swimming': 'Yüzme',
-                'hiking': 'Doğa Yürüyüşü',
-                'tennis': 'Tenis',
+                'running': 'Running',
+                'cycling': 'Cycling',
+                'walking': 'Walking',
+                'sports': 'Outdoor Sports',
+                'swimming': 'Swimming',
+                'hiking': 'Hiking',
+                'tennis': 'Tennis',
                 'golf': 'Golf'
+
             };
             return names[activityId] || activityId;
         }
 
         function getAgeGroupName(ageGroup) {
             const names = {
-                'child': 'Çocuklar',
-                'adult': 'Yetişkinler',
-                'elderly': 'Yaşlılar'
+                'child': 'Child',
+                'adult': 'Adult',
+                'elderly': 'Elderly'
+
             };
             return names[ageGroup] || ageGroup;
         }
 
-        // ========== BACKEND BİLDİRİMLERİNİ OLUŞTUR ==========
-        // ========== BACKEND BİLDİRİMLERİNİ OLUŞTUR ==========
         // ========== BACKEND BİLDİRİMLERİNİ OLUŞTUR ==========
         function generateBackendNotifications(temp, aqi, pm25, wind, humidity) {
             const notifications = [];
@@ -3718,14 +3629,13 @@
                 selectedActivities: selectedActivities // Seçili aktiviteleri log'la
             });
 
-            // 1. AKTİVİTE BİLDİRİMLERİ - SADECE SEÇİLİ AKTİVİTELER İÇİN
             // Tüm aktiviteler yerine sadece kullanıcının seçtiği aktiviteleri kontrol et
             // 1. AKTİVİTE BİLDİRİMLERİ - SADECE SEÇİLİ AKTİVİTELER İÇİN
             const locationName = currentLocationData.name || 'Current Location';
             selectedActivities.forEach(activityId => {
                 const activityResult = checkActivity(activityId, temp, wind, rain, aqi, pm25);
 
-                if (activityResult.durum === "Uygun Değil") {
+                if (activityResult.durum === "Not Suitable") {
                     notifications.push({
                         id: Date.now() + Math.random(),
                         type: 'warning',
@@ -3742,7 +3652,7 @@
             if (healthPreferences.ageGroup) {
                 const ageResult = ageGroupAdvice(healthPreferences.ageGroup, temp, aqi, pm25);
 
-                if (ageResult.durum === "Uygun Değil") {
+                if (ageResult.durum === "Not Suitable") {
                     notifications.push({
                         id: Date.now() + Math.random(),
                         type: 'warning',
@@ -3758,11 +3668,11 @@
             // 3. HAMİLELİK BİLDİRİMLERİ
             if (healthPreferences.isPregnant) {
                 const pregnancyResult = pregnancyAdvice("pregnant", temp, aqi, pm25);
-                if (pregnancyResult.durum === "Uygun Değil") {
+                if (pregnancyResult.durum === "Not Suitable") {
                     notifications.push({
                         id: Date.now() + Math.random(),
                         type: 'error',
-                        title: 'Hamileler İçin Uyarı',
+                        title: 'Warning for Pregnant Women',
                         message: pregnancyResult.neden,
                         time: currentTime,
                         read: false,
@@ -3773,11 +3683,11 @@
 
             if (healthPreferences.isBreastfeeding) {
                 const breastfeedingResult = pregnancyAdvice("breastfeeding", temp, aqi, pm25);
-                if (breastfeedingResult.durum === "Uygun Değil") {
+                if (breastfeedingResult.durum === "Not Suitable") {
                     notifications.push({
                         id: Date.now() + Math.random(),
                         type: 'error',
-                        title: 'Emziren Anneler İçin Uyarı',
+                        title: 'Warning for Breastfeeding Mothers',
                         message: breastfeedingResult.neden,
                         time: currentTime,
                         read: false,
