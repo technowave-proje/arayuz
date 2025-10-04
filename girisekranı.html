@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEMPO-Giriş Ekranı</title>
+    <title>TEMP-🌏-Login Screen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             box-sizing: border-box;
         }
+
         .gradient-bg {
             background: linear-gradient(135deg, #568ad3 0%, #568ad3 50%, #568ad3 100%);
         }
@@ -18,8 +20,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         /* Responsive menü animasyonu */
@@ -28,6 +37,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col">
 
     <!-- Navigation -->
@@ -35,38 +45,46 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                        <span class="text-2xl"></span>
+                    <div class="flex items-center justify-center"
+                        style="margin-top: 4px; margin-bottom: -8px;margin-right:-25px;">
+                        <img src="82b58dd9-91c8-4c6a-a8a3-dde34dde7404 (1).png" alt="TEMPO"
+                            class="w-28 h-28 object-contain"> <!--LOGO-->
                     </div>
                     <div>
                         <h1 class="text-xl font-bold">TEMP-🌏</h1>
-                        <p class="text-xs opacity-90">Hava Kalitesi İzleme</p>
+                        <p class="text-xs opacity-90">Air Quality Monitoring</p>
                     </div>
                 </div>
-                
-              
+
+
                 <div class="md:hidden">
                     <button onclick="toggleMobileMenu()" class="p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
                         </svg>
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-black bg-opacity-20">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <button onclick="showSection('home')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 flex items-center gap-2">
+                <button onclick="showSection('home')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20 flex items-center gap-2">
                     <div class="w-2 h-2 bg-green-400 rounded-full pulse-dot"></div>
                     Live
                 </button>
-                <button onclick="showSection('forecast')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Hava Durumu</button>
-                <button onclick="showSection('map')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Harita</button>
-                <button onclick="showSection('alerts')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Bildirimler</button>
-                <button onclick="showSection('settings')" class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Ayarlar</button>
+                <button onclick="showSection('forecast')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Hava
+                    Durumu</button>
+                <button onclick="showSection('map')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Harita</button>
+                <button onclick="showSection('alerts')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Bildirimler</button>
+                <button onclick="showSection('settings')"
+                    class="block w-full text-left px-3 py-2 rounded-md hover:bg-white hover:bg-opacity-20">Ayarlar</button>
             </div>
         </div>
     </nav>
@@ -74,50 +92,49 @@
     <!-- Login Box -->
     <div class="flex-1 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-            <h2 class="text-2xl font-bold text-gray-800 text-center mb-8">Kullanıcı Girişi</h2>
-            
+            <h2 class="text-2xl font-bold text-gray-800 text-center mb-8">User Login</h2>
+
             <div class="space-y-6">
                 <!-- Kullanıcı Adı -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Kullanıcı Adı
+                        Username
                     </label>
-                    <input 
-                        type="text" 
-                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-gray-700"
-                    >
+                    <input type="text"
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-gray-700">
                 </div>
 
                 <!-- Şifre -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Şifre
+                        Password
                     </label>
-                    <input 
-                        type="password" 
-                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-gray-700"
-                    >
+                    <input type="password"
+                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors duration-200 text-gray-700">
                 </div>
 
                 <!-- Giriş Butonu -->
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 mt-6">
-                 <a href="http://127.0.0.1:5500/deneme.html">Giriş Yap</a>
+                <button
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 mt-6">
+                    <a href="http://127.0.0.1:5500/deneme.html">Login</a>
                 </button>
-                
+
             </div>
 
             <!-- Alt Linkler -->
             <div class="mt-6 text-center space-y-2">
                 <p class="text-sm text-gray-600">
-                    <a href="http://127.0.0.1:5500/kay%C4%B1tol.html" target="_blank" class="text-blue-600 hover:text-blue-800 transition-colors">Kayıt Ol</a>
+                    <a href="http://127.0.0.1:5500/%C4%B1ng5.html" target="_blank"
+                        class="text-blue-600 hover:text-blue-800 transition-colors">Sign Up</a>
                 </p>
                 <p class="text-sm text-gray-600">
-                    <a href="http://127.0.0.1:5500/sifrem%C4%B1unuttum.html" target="_blank" class="text-blue-600 hover:text-blue-800 transition-colors">Şifremi Unuttum</a>
+                    <a href="http://127.0.0.1:5500/sifrem%C4%B1unuttum.html"
+                        class="text-blue-600 hover:text-blue-800 transition-colors">Forgot Password</a>
                 </p>
             </div>
         </div>
     </div>
 
 </body>
-</html>
 
+</html>
